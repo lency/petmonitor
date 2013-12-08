@@ -4,5 +4,7 @@
     <string name="app_name">petmonitor</string>
     <string name="action_settings">Settings</string>
     <string name="check_login">Loading</string>
-
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_map">MapActivity</string>
+    <string name="button_send">Send</string>
 </resources>

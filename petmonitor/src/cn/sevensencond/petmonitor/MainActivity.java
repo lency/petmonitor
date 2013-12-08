@@ -1,9 +1,13 @@
 package cn.sevensencond.petmonitor;
 
+import cn.sevensencond.petmonitor.MapActivity;
+
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
@@ -51,4 +55,8 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
+	public void sendMessage(View view) {
+        Intent intent = new Intent(this, MapActivity.class);
+        startActivity(intent);
+    }
 }
