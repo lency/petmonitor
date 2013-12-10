@@ -1,6 +1,5 @@
 package cn.sevensencond.petmonitor;
 
-import android.R.integer;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -18,17 +18,27 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.BMapManager;
+import com.baidu.mapapi.map.ItemizedOverlay;
 import com.baidu.mapapi.map.LocationData;
-import com.baidu.mapapi.map.MKMapStatus;
-import com.baidu.mapapi.map.MKMapStatusChangeListener;
 import com.baidu.mapapi.map.MKMapViewListener;
 import com.baidu.mapapi.map.MapController;
 import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationOverlay;
-import com.baidu.mapapi.utils.DistanceUtil;
+import com.baidu.mapapi.map.OverlayItem;
+import com.baidu.mapapi.map.RouteOverlay;
+import com.baidu.mapapi.search.MKAddrInfo;
+import com.baidu.mapapi.search.MKBusLineResult;
+import com.baidu.mapapi.search.MKDrivingRouteResult;
+import com.baidu.mapapi.search.MKPlanNode;
+import com.baidu.mapapi.search.MKPoiResult;
+import com.baidu.mapapi.search.MKSearch;
+import com.baidu.mapapi.search.MKSearchListener;
+import com.baidu.mapapi.search.MKShareUrlResult;
+import com.baidu.mapapi.search.MKSuggestionResult;
+import com.baidu.mapapi.search.MKTransitRouteResult;
+import com.baidu.mapapi.search.MKWalkingRouteResult;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
-import com.baidu.platform.comapi.map.Projection;
 
 public class MapActivity extends Activity {
 
@@ -43,6 +53,13 @@ public class MapActivity extends Activity {
     MyLocationOverlay myLocationOverlay = null;
 
     boolean isFirstLoc = true;// 是否首次定位
+    
+    // 检索服务，用于路径规划
+    MKSearch mMKSearch = null;
+    RouteOverlay routeOverlay = null;
+    // Target Location, 以后要改成真实坐标
+    int targetLat = 40057031;
+    int targetLgt = 116307852;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,27 +100,27 @@ public class MapActivity extends Activity {
         // 修改定位数据后刷新图层生效
         mMapView.refresh();
 
-        MKMapStatusChangeListener mylistener = new MKMapStatusChangeListener() {
-            public void onMapStatusChange(MKMapStatus mapStatus) {
-                float zoom = mapStatus.zoom; // 地图缩放等级
-                int overlooking = mapStatus.overlooking; // 地图俯视角度
-                int rotate = mapStatus.rotate; // 地图旋转角度
-                GeoPoint targetGeo = mapStatus.targetGeo; // 中心点的地理坐标
-                Point targetScreen = mapStatus.targetScreen; // 中心点的屏幕坐标
-                // TODO add your process
-                
-                Projection projection = mMapView.getProjection();
-                int circleLeftX = targetScreen.x * 2 / 10;
-                GeoPoint gPoint = projection.fromPixels(circleLeftX, targetScreen.y);
-                Log.d("Some", "gPoint is: "+ gPoint);
-
-                double distance = DistanceUtil.getDistance(gPoint, targetGeo);
-                Log.d("Some", "distance is: "+distance);
-                
-            }
-        };
-        // 为 mapview 注册地图状态监听者。
-        mMapView.regMapStatusChangeListener(mylistener);
+//        MKMapStatusChangeListener mylistener = new MKMapStatusChangeListener() {
+//            public void onMapStatusChange(MKMapStatus mapStatus) {
+//                float zoom = mapStatus.zoom; // 地图缩放等级
+//                int overlooking = mapStatus.overlooking; // 地图俯视角度
+//                int rotate = mapStatus.rotate; // 地图旋转角度
+//                GeoPoint targetGeo = mapStatus.targetGeo; // 中心点的地理坐标
+//                Point targetScreen = mapStatus.targetScreen; // 中心点的屏幕坐标
+//                // TODO add your process
+//                
+//                Projection projection = mMapView.getProjection();
+//                int circleLeftX = targetScreen.x * 2 / 10;
+//                GeoPoint gPoint = projection.fromPixels(circleLeftX, targetScreen.y);
+//                Log.d("Some", "gPoint is: "+ gPoint);
+//
+//                double distance = DistanceUtil.getDistance(gPoint, targetGeo);
+//                Log.d("Some", "distance is: "+distance);
+//                
+//            }
+//        };
+//        // 为 mapview 注册地图状态监听者。
+//        mMapView.regMapStatusChangeListener(mylistener);
         
         MKMapViewListener mapViewListener = new MKMapViewListener() {    
             
@@ -142,10 +159,10 @@ public class MapActivity extends Activity {
                 circleView.setMinimumHeight(mapHeight);
 
                 circleView.setCenterPixel(centerPoint);
-                circleView.setRadius((int)(mapWidth*0.8/2));
+                circleView.setRadius((int)(mapWidth*0.9/2));
                 
                 MapView.LayoutParams layoutParam = new MapView.LayoutParams(
-                // 控件宽,继承自ViewGroup.LayoutParams
+                    // 控件宽,继承自ViewGroup.LayoutParams
                     MapView.LayoutParams.WRAP_CONTENT,
                     // 控件高,继承自ViewGroup.LayoutParams
                     MapView.LayoutParams.WRAP_CONTENT,
@@ -156,9 +173,61 @@ public class MapActivity extends Activity {
                     MapView.LayoutParams.TOP);
                 // 添加View到MapView中
                 mMapView.addView(circleView, layoutParam);
-            }       
+            }
         };    
         mMapView.regMapViewListener(mBMapMan, mapViewListener);  //注册监听 
+        
+        mMKSearch = new MKSearch();  
+        mMKSearch.init(mBMapMan, new MySearchListener());//注意，MKSearchListener只支持一个，以最后一次设置为准
+        
+        addItemOverlay();
+    }
+    
+    public class MySearchListener implements MKSearchListener {    
+        @Override    
+        public void onGetAddrResult(MKAddrInfo result, int iError) {    
+               //返回地址信息搜索结果    
+        }    
+        @Override    
+        public void onGetDrivingRouteResult(MKDrivingRouteResult result, int iError) {    
+            //返回驾乘路线搜索结果    
+            if (result == null) {  
+                return;  
+            }  
+            routeOverlay = new RouteOverlay(MapActivity.this, mMapView);  // 此处仅展示一个方案作为示例  
+            routeOverlay.setData(result.getPlan(0).getRoute(0));  
+            mMapView.getOverlays().add(routeOverlay);
+            mMapView.refresh();
+        }    
+        @Override    
+        public void onGetPoiResult(MKPoiResult result, int type, int iError) {    
+                //返回poi搜索结果    
+        }    
+        @Override    
+        public void onGetTransitRouteResult(MKTransitRouteResult result, int iError) {    
+                //返回公交搜索结果    
+        }    
+        @Override    
+        public void onGetWalkingRouteResult(MKWalkingRouteResult result, int iError) {    
+                //返回步行路线搜索结果    
+        }    
+        @Override        
+        public void onGetBusDetailResult(MKBusLineResult result, int iError) {    
+                //返回公交车详情信息搜索结果    
+        }    
+        @Override    
+        public void onGetSuggestionResult(MKSuggestionResult result, int iError) {    
+                //返回联想词信息搜索结果    
+        }  
+        @Override   
+        public void onGetShareUrlResult(MKShareUrlResult result , int type, int error) {  
+               //在此处理短串请求返回结果.   
+        }
+        @Override
+        public void onGetPoiDetailSearchResult(int arg0, int arg1) {
+            // TODO Auto-generated method stub
+            
+        }
     }
     
     public class CircleView extends View {
@@ -180,16 +249,16 @@ public class MapActivity extends Activity {
             p.setAntiAlias(true);
             p.setColor(Color.RED);
             p.setStyle(Paint.Style.STROKE); 
-            p.setStrokeWidth(4.5f);
+            p.setStrokeWidth(3f);
             // opacity
             //p.setAlpha(0x80); //
             canvas.drawCircle(x, y, r, p);
             
             Paint p2 = new Paint();
             p2.setAntiAlias(true);
-            p2.setColor(Color.BLACK);
+            p2.setColor(Color.RED);
             p2.setStyle(Paint.Style.FILL);
-            p2.setAlpha(0x80);
+            p2.setAlpha(0x20);
             canvas.drawCircle(x, y, r, p2);
         }
         
@@ -241,6 +310,55 @@ public class MapActivity extends Activity {
                 return;
             }
         }
+    }
+    
+    public void addItemOverlay() {
+        //准备overlay图像数据，根据实情情况修复  
+        Drawable mark= getResources().getDrawable(R.drawable.point2);
+        //用OverlayItem准备Overlay数据  
+        OverlayItem item1 = new OverlayItem(new GeoPoint(targetLat, targetLgt),"item1","item1");
+        item1.setAnchor(OverlayItem.ALING_CENTER);
+        //创建IteminizedOverlay  
+        ItemizedOverlay<OverlayItem> itemOverlay = new ItemizedOverlay<OverlayItem>(mark, mMapView);
+        //将IteminizedOverlay添加到MapView中  
+        mMapView.getOverlays().add(itemOverlay);
+        //添加overlay, 当批量添加Overlay时使用addItem(List<OverlayItem>)效率更高  
+        itemOverlay.addItem(item1);
+        mMapView.refresh();
+        //删除overlay .  
+        //itemOverlay.removeItem(itemOverlay.getItem(0));  
+        //mMapView.refresh();  
+        //清除overlay  
+        // itemOverlay.removeAll();  
+        // mMapView.refresh();
+    }
+    
+    public void locateUser(View view) {
+        Log.d("ClickButton", "Click lacate user button");
+        mMapController.animateTo(new GeoPoint(
+            (int) (locData.latitude * 1e6),
+            (int) (locData.longitude * 1e6)));
+    }
+    
+    public void locateTarget(View view) {
+        Log.d("ClickButton", "Click lacate target button");  
+        mMapController.animateTo(new GeoPoint(targetLat, targetLgt));
+    }
+    
+    public void handleRoute(View view) {
+        Log.d("ClickButton", "Click handle route button");
+        if (routeOverlay != null) {
+            mMapView.getOverlays().remove(routeOverlay);
+            mMapView.refresh();
+            routeOverlay = null;
+            return;
+        }
+        MKPlanNode start = new MKPlanNode();  
+        start.pt = new GeoPoint((int) (locData.latitude * 1E6), (int) (locData.longitude * 1E6));  
+        MKPlanNode end = new MKPlanNode();  
+        end.pt = new GeoPoint(targetLat, targetLgt);
+        mMKSearch.setDrivingPolicy(MKSearch.ECAR_TIME_FIRST); // 设置驾车路线搜索策略，时间优先、费用最少或距离最短  
+        mMKSearch.drivingSearch(null, start, null, end);
     }
 
     @Override

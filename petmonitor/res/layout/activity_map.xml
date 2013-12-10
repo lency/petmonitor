@@ -1,16 +1,44 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"  
-     android:orientation="vertical"  
-     android:layout_width="fill_parent"  
-     android:layout_height="fill_parent">  
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"  
+    android:orientation="vertical"  
+    android:layout_width="fill_parent"  
+    android:layout_height="fill_parent">  
      <!-- <TextView android:layout_width="fill_parent"  
          android:layout_height="wrap_content"  
          android:text="hello world" /> -->  
-     <com.baidu.mapapi.map.MapView android:id="@+id/bmapsView"  
-         android:layout_width="fill_parent"  
-         android:layout_height="fill_parent"  
-         android:clickable="true" />
-     <View android:id="@+id/surfaceView"  
-         android:layout_width="fill_parent"  
-         android:layout_height="fill_parent"  
-         android:clickable="true" />
-</LinearLayout>
+    <com.baidu.mapapi.map.MapView android:id="@+id/bmapsView"  
+        android:layout_width="fill_parent"  
+        android:layout_height="fill_parent"  
+        android:clickable="true" />
+    
+    <RelativeLayout android:gravity="center_vertical" 
+        android:id="@+id/fence_relativelayout_buttons"
+        android:background="#b0ffffff" 
+        android:paddingLeft="3.0dp" 
+        android:paddingRight="3.0dp" 
+        android:layout_width="fill_parent" 
+        android:layout_height="50.0dp">
+     <Button android:id="@+id/fence_button_fenceinout" 
+         android:background="@drawable/fencein" 
+         android:layout_width="wrap_content" 
+         android:layout_height="wrap_content" 
+         android:layout_alignParentRight="true" 
+         android:onClick="handleRoute" />
+     <Button android:id="@+id/fence_button_locate_user"
+         android:background="@drawable/controller" 
+         android:layout_width="wrap_content" 
+         android:layout_height="wrap_content" 
+         android:layout_marginRight="10.0dp" 
+         android:layout_toLeftOf="@id/fence_button_fenceinout" 
+         android:layout_centerVertical="true" 
+         android:onClick="locateUser" />
+     <Button android:id="@+id/fence_button_locate_tracker" 
+         android:background="@drawable/tracker" 
+         android:layout_width="wrap_content" 
+         android:layout_height="wrap_content" 
+         android:layout_marginRight="10.0dp" 
+         android:layout_toLeftOf="@id/fence_button_locate_user" 
+         android:layout_centerVertical="true" 
+         android:onClick="locateTarget" />
+    </RelativeLayout>
+        
+</RelativeLayout>
