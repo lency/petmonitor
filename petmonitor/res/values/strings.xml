@@ -7,4 +7,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_map">MapActivity</string>
     <string name="button_send">Send</string>
+    <string name="stubImageDescription">Image</string>
+    
 </resources>
