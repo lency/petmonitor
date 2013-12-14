@@ -1,9 +1,5 @@
 package cn.sevensencond.petmonitor;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import org.apache.http.Header;
 
 import android.util.Log;
@@ -35,11 +31,7 @@ public class petserver {
 	
 	private final Gson gson = new Gson();
 	private final static String SERVER = "http://42.96.138.166:8081/ci/app/api/";
-	private static String token = "";
-	private static String buildUrl(String x)
-	{
-		return SERVER;
-	}
+
 	public void check_login(final serverHandle handle)
 	{
 		//Get User Information from Cache file
@@ -60,35 +52,99 @@ public class petserver {
 		     public void onSuccess(int statusCode, Header[] headers, String responseBody) {
 		         System.out.println(responseBody);
 		         self.sess = gson.fromJson(responseBody, session.class);
-		         handle.onSuccess(self);
+		         //handle.onSuccess(self);
 		     }
 		     
 		     @Override
 		     public void onFailure(int statusCode, Header[] headers, String responseBody, java.lang.Throwable error) {
 		    	 Log.v("SERVER", "error when login");
-		    	 handle.onFailed(self);
+		    	 //handle.onFailed(self);
 		     }
 		 });
 	}
 	public void getuserinfo(final serverHandle handle){
 		action act = gson.fromJson(gson.toJson(sess), action.class);
 		act.action = "getuserinfo";
-		AsyncHttpClient client = new AsyncHttpClient();
+
 		RequestParams params = new RequestParams();
 		params.put("posts", gson.toJson(act));
 		params.put("action", act.action);
-		final petserver self = this;
+		
+		sendRequest(params, handle);
+
+	}
+	
+	public void login(String username, String password, serverHandle handle)
+	{
+		RequestParams params = new RequestParams();
+		params.put("posts", "{\"userMail\":\""+username+
+				"\",\"password\":\""+password+
+				"\",\"platForm\":\""+"Android"+
+				"\",\"action\":\""+"login"+
+				"\"}");
+		params.put("action", "login");
+		
+		sendRequest(params, handle);		
+	}
+	
+	public void newuser(String username, String mobile, String password, serverHandle handle)
+	{
+		RequestParams params = new RequestParams();
+		params.put("posts", "{\"userMail\":\""+username+
+				"\",\"Mobile\":\""+mobile+
+				"\",\"password\":\""+password+
+				"\",\"platForm\":\""+"Android"+
+				"\",\"action\":\""+"register"+
+				"\"}");
+		params.put("action", "register");
+		
+		sendRequest(params, handle);
+	}
+	
+	public void lastPos(serverHandle handle)
+	{
+		RequestParams params = new RequestParams();
+		params.put("posts", "{\"userID\":\""+sess.userID+
+				"\",\"sessionID\":\""+sess.sessionID+
+
+				"\",\"platForm\":\""+"Android"+
+				"\",\"action\":\""+"location"+
+				"\"}");
+		params.put("action", "location");
+		
+		sendRequest(params, handle);
+	}
+	
+	public void bindDevice(String sn, String devicePassword, serverHandle handle)
+	{
+		RequestParams params = new RequestParams();
+		params.put("posts", "{\"sn\":\""+sn+
+				"\",\"password\":\""+devicePassword+
+				"\",\"userID\":\""+sess.userID+
+				"\",\"sessionID\":\""+sess.sessionID+
+
+				"\",\"platForm\":\""+"Android"+
+				"\",\"action\":\""+"bind"+
+				"\"}");
+		params.put("action", "bind");
+		
+		sendRequest(params, handle);
+	}
+	
+	private void sendRequest(RequestParams params, final serverHandle handle)
+	{
+		AsyncHttpClient client = new AsyncHttpClient();
 		client.post(SERVER, params, new TextHttpResponseHandler() {
 			@Override
 		     public void onSuccess(int statusCode, Header[] headers, String responseBody) {
-		         System.out.println(responseBody);
-		         handle.onSuccess(self);
+		         Log.v("SERVER", responseBody);
+		         handle.onSuccess(responseBody);
 		     }
 		     
 		     @Override
 		     public void onFailure(int statusCode, Header[] headers, String responseBody, java.lang.Throwable error) {
-		    	 Log.v("SERVER", "error when login");
-		    	 handle.onFailed(self);
+		    	 Log.v("SERVER", "error");
+		    	 handle.onFailed(responseBody);
 		     }
 		});
 	}
@@ -96,6 +152,6 @@ public class petserver {
 
 abstract class serverHandle
 {
-	public abstract void onSuccess(petserver server);
-	public abstract void onFailed(petserver server);
+	public abstract void onSuccess(String server);
+	public abstract void onFailed(String server);
 }
