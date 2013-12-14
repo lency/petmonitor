@@ -1,5 +1,6 @@
 package cn.sevensencond.petmonitor;
 
+import android.R.integer;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ImageButton;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -60,6 +62,9 @@ public class MapActivity extends Activity {
     // Target Location, 以后要改成真实坐标
     int targetLat = 40057031;
     int targetLgt = 116307852;
+    
+    boolean fenceIn = false;
+    CircleView circleView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,12 +159,14 @@ public class MapActivity extends Activity {
                 Log.d("MapView", "width is "+mapWidth+" height is "+mapHeight);
                 Point centerPoint = mMapView.getCenterPixel();
 
-                CircleView circleView = new CircleView(getApplicationContext());
+                circleView = new CircleView(getApplicationContext());
                 circleView.setMinimumWidth(mapWidth);
                 circleView.setMinimumHeight(mapHeight);
 
                 circleView.setCenterPixel(centerPoint);
                 circleView.setRadius((int)(mapWidth*0.9/2));
+                
+                circleView.setColor(Color.RED);
                 
                 MapView.LayoutParams layoutParam = new MapView.LayoutParams(
                     // 控件宽,继承自ViewGroup.LayoutParams
@@ -232,9 +239,11 @@ public class MapActivity extends Activity {
     
     public class CircleView extends View {
         
+        // default center pixel coordinate and default radius
         int x = 240;
         int y = 378;
         int r = 200;
+        int color = Color.RED;
         
         public CircleView(Context context) {
             super(context);
@@ -247,7 +256,7 @@ public class MapActivity extends Activity {
             Paint p = new Paint();
             // smooths
             p.setAntiAlias(true);
-            p.setColor(Color.RED);
+            p.setColor(color);
             p.setStyle(Paint.Style.STROKE); 
             p.setStrokeWidth(3f);
             // opacity
@@ -256,7 +265,7 @@ public class MapActivity extends Activity {
             
             Paint p2 = new Paint();
             p2.setAntiAlias(true);
-            p2.setColor(Color.RED);
+            p2.setColor(color);
             p2.setStyle(Paint.Style.FILL);
             p2.setAlpha(0x20);
             canvas.drawCircle(x, y, r, p2);
@@ -269,6 +278,10 @@ public class MapActivity extends Activity {
         public void setCenterPixel(Point pt) {
             this.x = pt.x;
             this.y = pt.y;
+        }
+        
+        public void setColor(int color) {
+            this.color = color;
         }
     }
 
@@ -359,6 +372,18 @@ public class MapActivity extends Activity {
         end.pt = new GeoPoint(targetLat, targetLgt);
         mMKSearch.setDrivingPolicy(MKSearch.ECAR_TIME_FIRST); // 设置驾车路线搜索策略，时间优先、费用最少或距离最短  
         mMKSearch.drivingSearch(null, start, null, end);
+    }
+    
+    public void fenceInOut(View view) {
+        Log.d("ClickButton", "Click fenceInOut button");
+        int color = (fenceIn)? Color.BLUE : Color.RED;
+        circleView.setColor(color);
+        circleView.invalidate();
+        ImageButton imageButton = (ImageButton)findViewById(R.id.fence_button_fenceinout);
+//        imageButton.setBackground(getResources().getDrawable(R.drawable.fenceout));
+        int imageRrc = (fenceIn)? R.drawable.fenceout: R.drawable.fencein;
+        imageButton.setImageResource(imageRrc);
+        fenceIn = !fenceIn;
     }
 
     @Override
