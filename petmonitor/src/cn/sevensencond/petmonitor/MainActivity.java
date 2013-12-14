@@ -15,25 +15,25 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.welcome);
 		
-		petserver server = new petserver();
+		final petserver server = new petserver();
 		server.check_login(new serverHandle(){
 			@Override
-			public void onSuccess(petserver server)
+			public void onSuccess(String result)
 			{
 				petserver.userinfo ui = server.ui;
 				Log.v("a", ui.userMail);
-				setContentView(R.layout.welcome);
+				setContentView(R.layout.activity_main);
 				
 				server.getuserinfo(new serverHandle(){
 					@Override
-					public void onSuccess(petserver server)
+					public void onSuccess(String result)
 					{
 						Log.v("server","getuserinfo ok");
 					}
 					@Override
-					public void onFailed(petserver server)
+					public void onFailed(String result)
 					{
 						
 					}
@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
 				
 			}
 			@Override
-			public void onFailed(petserver server)
+			public void onFailed(String result)
 			{
 				
 			}
