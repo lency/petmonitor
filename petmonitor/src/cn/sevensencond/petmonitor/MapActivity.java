@@ -1,4 +1,4 @@
-package cn.sevensencond.petmonitor;
+ï»¿package cn.sevensencond.petmonitor;
 
 import android.R.integer;
 import android.app.Activity;
@@ -51,15 +51,15 @@ public class MapActivity extends Activity {
     LocationClient mLocClient;
     LocationData locData = null;
     public MyLocationListenner myListener = new MyLocationListenner();
-    // ¶¨Î»Í¼²ã
+    // å®šä½å›¾å±‚
     MyLocationOverlay myLocationOverlay = null;
 
-    boolean isFirstLoc = true;// ÊÇ·ñÊ×´Î¶¨Î»
+    boolean isFirstLoc = true;// æ˜¯å¦é¦–æ¬¡å®šä½
     
-    // ¼ìË÷·şÎñ£¬ÓÃÓÚÂ·¾¶¹æ»®
+    // æ£€ç´¢æœåŠ¡ï¼Œç”¨äºè·¯å¾„è§„åˆ’
     MKSearch mMKSearch = null;
     RouteOverlay routeOverlay = null;
-    // Target Location, ÒÔºóÒª¸Ä³ÉÕæÊµ×ø±ê
+    // Target Location, ä»¥åè¦æ”¹æˆçœŸå®åæ ‡
     int targetLat = 40057031;
     int targetLgt = 116307852;
     
@@ -71,67 +71,67 @@ public class MapActivity extends Activity {
         super.onCreate(savedInstanceState);
         mBMapMan = new BMapManager(getApplication());
         mBMapMan.init("MBwMkvhVTIRMlnsqlCeXZybo", null);
-        // ×¢Òâ£ºÇëÔÚÊÔÓÃsetContentViewÇ°³õÊ¼»¯BMapManager¶ÔÏó£¬·ñÔò»á±¨´í
+        // æ³¨æ„ï¼šè¯·åœ¨è¯•ç”¨setContentViewå‰åˆå§‹åŒ–BMapManagerå¯¹è±¡ï¼Œå¦åˆ™ä¼šæŠ¥é”™
         setContentView(R.layout.activity_map);
         mMapView = (MapView) findViewById(R.id.bmapsView);
         mMapView.setBuiltInZoomControls(true);
-        // ÉèÖÃÆôÓÃÄÚÖÃµÄËõ·Å¿Ø¼ş
+        // è®¾ç½®å¯ç”¨å†…ç½®çš„ç¼©æ”¾æ§ä»¶
         mMapController = mMapView.getController();
-        // µÃµ½mMapViewµÄ¿ØÖÆÈ¨,¿ÉÒÔÓÃËü¿ØÖÆºÍÇı¶¯Æ½ÒÆºÍËõ·Å
+        // å¾—åˆ°mMapViewçš„æ§åˆ¶æƒ,å¯ä»¥ç”¨å®ƒæ§åˆ¶å’Œé©±åŠ¨å¹³ç§»å’Œç¼©æ”¾
         // GeoPoint point =new GeoPoint((int)(39.915* 1E6),(int)(116.404* 1E6));
-        // ÓÃ¸ø¶¨µÄ¾­Î³¶È¹¹ÔìÒ»¸öGeoPoint£¬µ¥Î»ÊÇÎ¢¶È (¶È * 1E6)
-        // mMapController.setCenter(point);//ÉèÖÃµØÍ¼ÖĞĞÄµã
-        mMapController.setZoom(14);// ÉèÖÃµØÍ¼zoom¼¶±ğ
+        // ç”¨ç»™å®šçš„ç»çº¬åº¦æ„é€ ä¸€ä¸ªGeoPointï¼Œå•ä½æ˜¯å¾®åº¦ (åº¦ * 1E6)
+        // mMapController.setCenter(point);//è®¾ç½®åœ°å›¾ä¸­å¿ƒç‚¹
+        mMapController.setZoom(14);// è®¾ç½®åœ°å›¾zoomçº§åˆ«
 
         mLocClient = new LocationClient(this);
         locData = new LocationData();
         mLocClient.registerLocationListener(myListener);
         LocationClientOption option = new LocationClientOption();
-        option.setOpenGps(true);// ´ò¿ªgps
-        option.setCoorType("bd09ll"); // ÉèÖÃ×ø±êÀàĞÍ
+        option.setOpenGps(true);// æ‰“å¼€gps
+        option.setCoorType("bd09ll"); // è®¾ç½®åæ ‡ç±»å‹
         option.setScanSpan(1000);
         mLocClient.setLocOption(option);
         mLocClient.start();
 
         // mLocClient.requestLocation();
 
-        // ¶¨Î»Í¼²ã³õÊ¼»¯
+        // å®šä½å›¾å±‚åˆå§‹åŒ–
         myLocationOverlay = new MyLocationOverlay(mMapView);
-        // ÉèÖÃ¶¨Î»Êı¾İ
+        // è®¾ç½®å®šä½æ•°æ®
         myLocationOverlay.setData(locData);
-        // Ìí¼Ó¶¨Î»Í¼²ã
+        // æ·»åŠ å®šä½å›¾å±‚
         mMapView.getOverlays().add(myLocationOverlay);
         myLocationOverlay.enableCompass();
-        // ĞŞ¸Ä¶¨Î»Êı¾İºóË¢ĞÂÍ¼²ãÉúĞ§
+        // ä¿®æ”¹å®šä½æ•°æ®ååˆ·æ–°å›¾å±‚ç”Ÿæ•ˆ
         mMapView.refresh();
         
         MKMapViewListener mapViewListener = new MKMapViewListener() {    
             
             @Override    
             public void onMapMoveFinish() {    
-                // ´Ë´¦¿ÉÒÔÊµÏÖµØÍ¼ÒÆ¶¯Íê³ÉÊÂ¼şµÄ×´Ì¬¼àÌı    
+                // æ­¤å¤„å¯ä»¥å®ç°åœ°å›¾ç§»åŠ¨å®Œæˆäº‹ä»¶çš„çŠ¶æ€ç›‘å¬    
             }    
                                    
             @Override    
             public void onClickMapPoi(MapPoi arg0) {    
-                // ´Ë´¦¿ÉÊµÏÖµã»÷µ½µØÍ¼¿Éµã±ê×¢Ê±µÄ¼àÌı    
+                // æ­¤å¤„å¯å®ç°ç‚¹å‡»åˆ°åœ°å›¾å¯ç‚¹æ ‡æ³¨æ—¶çš„ç›‘å¬    
             }    
           
             @Override  
             public void onGetCurrentMap(Bitmap b) {  
-                //ÓÃMapView.getCurrentMap()·¢Æğ½ØÍ¼ºó£¬ÔÚ´Ë´¦Àí½ØÍ¼½á¹û.    
+                //ç”¨MapView.getCurrentMap()å‘èµ·æˆªå›¾åï¼Œåœ¨æ­¤å¤„ç†æˆªå›¾ç»“æœ.    
             }  
           
             @Override  
             public void onMapAnimationFinish() {  
             /** 
-             *  µØÍ¼Íê³É´ø¶¯»­µÄ²Ù×÷£¨Èç: animationTo()£©ºó£¬´Ë»Øµ÷±»´¥·¢ 
+             *  åœ°å›¾å®Œæˆå¸¦åŠ¨ç”»çš„æ“ä½œï¼ˆå¦‚: animationTo()ï¼‰åï¼Œæ­¤å›è°ƒè¢«è§¦å‘ 
              */  
             }  
           
             @Override  
             public void onMapLoadFinish() {  
-                //µØÍ¼³õÊ¼»¯Íê³ÉÊ±£¬´Ë»Øµ÷±»´¥·¢. 
+                //åœ°å›¾åˆå§‹åŒ–å®Œæˆæ—¶ï¼Œæ­¤å›è°ƒè¢«è§¦å‘. 
                 int mapWidth = mMapView.getWidth();
                 int mapHeight = mMapView.getHeight();
                 Log.d("MapView", "width is "+mapWidth+" height is "+mapHeight);
@@ -147,23 +147,23 @@ public class MapActivity extends Activity {
                 circleView.setColor(Color.RED);
                 
                 MapView.LayoutParams layoutParam = new MapView.LayoutParams(
-                    // ¿Ø¼ş¿í,¼Ì³Ğ×ÔViewGroup.LayoutParams
+                    // æ§ä»¶å®½,ç»§æ‰¿è‡ªViewGroup.LayoutParams
                     MapView.LayoutParams.WRAP_CONTENT,
-                    // ¿Ø¼ş¸ß,¼Ì³Ğ×ÔViewGroup.LayoutParams
+                    // æ§ä»¶é«˜,ç»§æ‰¿è‡ªViewGroup.LayoutParams
                     MapView.LayoutParams.WRAP_CONTENT,
-                    // Ê¹¿Ø¼ş¹Ì¶¨ÔÚÄ³¸öµØÀíÎ»ÖÃ
+                    // ä½¿æ§ä»¶å›ºå®šåœ¨æŸä¸ªåœ°ç†ä½ç½®
                     // pt,
                     0, 0,
-                    // ¿Ø¼ş¶ÔÆë·½Ê½
+                    // æ§ä»¶å¯¹é½æ–¹å¼
                     MapView.LayoutParams.TOP);
-                // Ìí¼ÓViewµ½MapViewÖĞ
+                // æ·»åŠ Viewåˆ°MapViewä¸­
                 mMapView.addView(circleView, layoutParam);
             }
         };    
-        mMapView.regMapViewListener(mBMapMan, mapViewListener);  //×¢²á¼àÌı 
+        mMapView.regMapViewListener(mBMapMan, mapViewListener);  //æ³¨å†Œç›‘å¬ 
         
         mMKSearch = new MKSearch();  
-        mMKSearch.init(mBMapMan, new MySearchListener());//×¢Òâ£¬MKSearchListenerÖ»Ö§³ÖÒ»¸ö£¬ÒÔ×îºóÒ»´ÎÉèÖÃÎª×¼
+        mMKSearch.init(mBMapMan, new MySearchListener());//æ³¨æ„ï¼ŒMKSearchListeneråªæ”¯æŒä¸€ä¸ªï¼Œä»¥æœ€åä¸€æ¬¡è®¾ç½®ä¸ºå‡†
         
         addItemOverlay();
     }
@@ -171,42 +171,42 @@ public class MapActivity extends Activity {
     public class MySearchListener implements MKSearchListener {    
         @Override    
         public void onGetAddrResult(MKAddrInfo result, int iError) {    
-               //·µ»ØµØÖ·ĞÅÏ¢ËÑË÷½á¹û    
+               //è¿”å›åœ°å€ä¿¡æ¯æœç´¢ç»“æœ    
         }    
         @Override    
         public void onGetDrivingRouteResult(MKDrivingRouteResult result, int iError) {    
-            //·µ»Ø¼İ³ËÂ·ÏßËÑË÷½á¹û    
+            //è¿”å›é©¾ä¹˜è·¯çº¿æœç´¢ç»“æœ    
             if (result == null) {  
                 return;  
             }  
-            routeOverlay = new RouteOverlay(MapActivity.this, mMapView);  // ´Ë´¦½öÕ¹Ê¾Ò»¸ö·½°¸×÷ÎªÊ¾Àı  
+            routeOverlay = new RouteOverlay(MapActivity.this, mMapView);  // æ­¤å¤„ä»…å±•ç¤ºä¸€ä¸ªæ–¹æ¡ˆä½œä¸ºç¤ºä¾‹  
             routeOverlay.setData(result.getPlan(0).getRoute(0));  
             mMapView.getOverlays().add(routeOverlay);
             mMapView.refresh();
         }    
         @Override    
         public void onGetPoiResult(MKPoiResult result, int type, int iError) {    
-                //·µ»ØpoiËÑË÷½á¹û    
+                //è¿”å›poiæœç´¢ç»“æœ    
         }    
         @Override    
         public void onGetTransitRouteResult(MKTransitRouteResult result, int iError) {    
-                //·µ»Ø¹«½»ËÑË÷½á¹û    
+                //è¿”å›å…¬äº¤æœç´¢ç»“æœ    
         }    
         @Override    
         public void onGetWalkingRouteResult(MKWalkingRouteResult result, int iError) {    
-                //·µ»Ø²½ĞĞÂ·ÏßËÑË÷½á¹û    
+                //è¿”å›æ­¥è¡Œè·¯çº¿æœç´¢ç»“æœ    
         }    
         @Override        
         public void onGetBusDetailResult(MKBusLineResult result, int iError) {    
-                //·µ»Ø¹«½»³µÏêÇéĞÅÏ¢ËÑË÷½á¹û    
+                //è¿”å›å…¬äº¤è½¦è¯¦æƒ…ä¿¡æ¯æœç´¢ç»“æœ    
         }    
         @Override    
         public void onGetSuggestionResult(MKSuggestionResult result, int iError) {    
-                //·µ»ØÁªÏë´ÊĞÅÏ¢ËÑË÷½á¹û    
+                //è¿”å›è”æƒ³è¯ä¿¡æ¯æœç´¢ç»“æœ    
         }  
         @Override   
         public void onGetShareUrlResult(MKShareUrlResult result , int type, int error) {  
-               //ÔÚ´Ë´¦Àí¶Ì´®ÇëÇó·µ»Ø½á¹û.   
+               //åœ¨æ­¤å¤„ç†çŸ­ä¸²è¯·æ±‚è¿”å›ç»“æœ.   
         }
         @Override
         public void onGetPoiDetailSearchResult(int arg0, int arg1) {
@@ -264,7 +264,7 @@ public class MapActivity extends Activity {
     }
 
     /**
-     * ¶¨Î»SDK¼àÌıº¯Êı
+     * å®šä½SDKç›‘å¬å‡½æ•°
      */
     public class MyLocationListenner implements BDLocationListener {
 
@@ -275,24 +275,24 @@ public class MapActivity extends Activity {
 
             locData.latitude = location.getLatitude();
             locData.longitude = location.getLongitude();
-            // Èç¹û²»ÏÔÊ¾¶¨Î»¾«¶ÈÈ¦£¬½«accuracy¸³ÖµÎª0¼´¿É
+            // å¦‚æœä¸æ˜¾ç¤ºå®šä½ç²¾åº¦åœˆï¼Œå°†accuracyèµ‹å€¼ä¸º0å³å¯
             locData.accuracy = location.getRadius();
-            // ´Ë´¦¿ÉÒÔÉèÖÃ locDataµÄ·½ÏòĞÅÏ¢, Èç¹û¶¨Î» SDK Î´·µ»Ø·½ÏòĞÅÏ¢£¬ÓÃ»§¿ÉÒÔ×Ô¼ºÊµÏÖÂŞÅÌ¹¦ÄÜÌí¼Ó·½ÏòĞÅÏ¢¡£
+            // æ­¤å¤„å¯ä»¥è®¾ç½® locDataçš„æ–¹å‘ä¿¡æ¯, å¦‚æœå®šä½ SDK æœªè¿”å›æ–¹å‘ä¿¡æ¯ï¼Œç”¨æˆ·å¯ä»¥è‡ªå·±å®ç°ç½—ç›˜åŠŸèƒ½æ·»åŠ æ–¹å‘ä¿¡æ¯ã€‚
             locData.direction = location.getDerect();
-            // ¸üĞÂ¶¨Î»Êı¾İ
+            // æ›´æ–°å®šä½æ•°æ®
             myLocationOverlay.setData(locData);
-            // ¸üĞÂÍ¼²ãÊı¾İÖ´ĞĞË¢ĞÂºóÉúĞ§
+            // æ›´æ–°å›¾å±‚æ•°æ®æ‰§è¡Œåˆ·æ–°åç”Ÿæ•ˆ
             mMapView.refresh();
-            // ÊÇÊÖ¶¯´¥·¢ÇëÇó»òÊ×´Î¶¨Î»Ê±£¬ÒÆ¶¯µ½¶¨Î»µã
+            // æ˜¯æ‰‹åŠ¨è§¦å‘è¯·æ±‚æˆ–é¦–æ¬¡å®šä½æ—¶ï¼Œç§»åŠ¨åˆ°å®šä½ç‚¹
             if (isFirstLoc) {
-                // ÒÆ¶¯µØÍ¼µ½¶¨Î»µã
+                // ç§»åŠ¨åœ°å›¾åˆ°å®šä½ç‚¹
                 Log.d("LocationOverlay", "receive location, animate to it");
                 mMapController.animateTo(new GeoPoint(
                         (int) (locData.latitude * 1e6),
                         (int) (locData.longitude * 1e6)));
                 // myLocationOverlay.setLocationMode(LocationMode.FOLLOWING);
             }
-            // Ê×´Î¶¨Î»Íê³É
+            // é¦–æ¬¡å®šä½å®Œæˆ
             isFirstLoc = false;
         }
 
@@ -304,22 +304,22 @@ public class MapActivity extends Activity {
     }
     
     public void addItemOverlay() {
-        //×¼±¸overlayÍ¼ÏñÊı¾İ£¬¸ù¾İÊµÇéÇé¿öĞŞ¸´  
+        //å‡†å¤‡overlayå›¾åƒæ•°æ®ï¼Œæ ¹æ®å®æƒ…æƒ…å†µä¿®å¤  
         Drawable mark= getResources().getDrawable(R.drawable.point2);
-        //ÓÃOverlayItem×¼±¸OverlayÊı¾İ  
+        //ç”¨OverlayItemå‡†å¤‡Overlayæ•°æ®  
         OverlayItem item1 = new OverlayItem(new GeoPoint(targetLat, targetLgt),"item1","item1");
         item1.setAnchor(OverlayItem.ALING_CENTER);
-        //´´½¨IteminizedOverlay  
+        //åˆ›å»ºIteminizedOverlay  
         ItemizedOverlay<OverlayItem> itemOverlay = new ItemizedOverlay<OverlayItem>(mark, mMapView);
-        //½«IteminizedOverlayÌí¼Óµ½MapViewÖĞ  
+        //å°†IteminizedOverlayæ·»åŠ åˆ°MapViewä¸­  
         mMapView.getOverlays().add(itemOverlay);
-        //Ìí¼Óoverlay, µ±ÅúÁ¿Ìí¼ÓOverlayÊ±Ê¹ÓÃaddItem(List<OverlayItem>)Ğ§ÂÊ¸ü¸ß  
+        //æ·»åŠ overlay, å½“æ‰¹é‡æ·»åŠ Overlayæ—¶ä½¿ç”¨addItem(List<OverlayItem>)æ•ˆç‡æ›´é«˜  
         itemOverlay.addItem(item1);
         mMapView.refresh();
-        //É¾³ıoverlay .  
+        //åˆ é™¤overlay .  
         //itemOverlay.removeItem(itemOverlay.getItem(0));  
         //mMapView.refresh();  
-        //Çå³ıoverlay  
+        //æ¸…é™¤overlay  
         // itemOverlay.removeAll();  
         // mMapView.refresh();
     }
@@ -348,7 +348,7 @@ public class MapActivity extends Activity {
         start.pt = new GeoPoint((int) (locData.latitude * 1E6), (int) (locData.longitude * 1E6));  
         MKPlanNode end = new MKPlanNode();  
         end.pt = new GeoPoint(targetLat, targetLgt);
-        mMKSearch.setDrivingPolicy(MKSearch.ECAR_TIME_FIRST); // ÉèÖÃ¼İ³µÂ·ÏßËÑË÷²ßÂÔ£¬Ê±¼äÓÅÏÈ¡¢·ÑÓÃ×îÉÙ»ò¾àÀë×î¶Ì  
+        mMKSearch.setDrivingPolicy(MKSearch.ECAR_TIME_FIRST); // è®¾ç½®é©¾è½¦è·¯çº¿æœç´¢ç­–ç•¥ï¼Œæ—¶é—´ä¼˜å…ˆã€è´¹ç”¨æœ€å°‘æˆ–è·ç¦»æœ€çŸ­  
         mMKSearch.drivingSearch(null, start, null, end);
     }
     
