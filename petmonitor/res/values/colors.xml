@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="title">#bf8f04a8</color>
+    <color name="partition">#ffdadada</color>
+    <color name="background">#ffffffff</color>
+    <color name="listtext">#ff000000</color>
+    <color name="littletext">#ff6e6e6e</color>
+    <color name="littlegray">#ffececec</color>
+    <color name="listviewCacheColor">#00000000</color>
+    <color name="error_text">#ffff0000</color>
+    <color name="edit_text">#ff000000</color>
+    <color name="edit_gray_text">#ff595959</color>
+    <color name="button_text">#ff010000</color>
+    <color name="list_small_text">#ff666666</color>
+    <color name="transparent">#00000000</color>
+    <color name="black">#ff000000</color>
+    <color name="edittext_name_color">#ff000000</color>
+    <color name="edittext_text_color">#ff000000</color>
+    <color name="red">#ffff0000</color>
+    <color name="sb_back">#ff7ae969</color>
+    <color name="sb_progress">#ff1d8c00</color>
+</resources>

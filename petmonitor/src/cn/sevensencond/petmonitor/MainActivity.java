@@ -59,4 +59,9 @@ public class MainActivity extends Activity {
         Intent intent = new Intent(this, MapActivity.class);
         startActivity(intent);
     }
+	
+	public void callOverview(View view) {
+        Intent intent = new Intent(this, OverviewActivity.class);
+        startActivity(intent);
+    }
 }

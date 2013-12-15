@@ -9,4 +9,10 @@
     <string name="button_send">Send</string>
     <string name="stubImageDescription">Image</string>
     
+    <string name="button_overview">Overview</string>
+    
+    <string name="locator_desc_tittle">设备列表</string>
+    <string name="nospot_label">您还没有添加任何pet</string>
+    <string name="title_activity_overview">OverviewActivity</string>
+
 </resources>

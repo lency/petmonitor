@@ -3,9 +3,16 @@
     android:layout_height="fill_parent" 
     android:background = "@drawable/ic_launcher">
 
-    <Button
+    <Button android:id="@+id/callMap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button_send"
         android:onClick="sendMessage" />
+    
+    <Button android:id="@+id/callOverview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_overview"
+        android:layout_toRightOf="@id/callMap"
+        android:onClick="callOverview" />
 </RelativeLayout>

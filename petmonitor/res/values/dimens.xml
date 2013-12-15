@@ -4,4 +4,26 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <dimen name="control_margin">20.0dp</dimen>
+    <dimen name="topControl_marginTop">17.0dp</dimen>
+    <dimen name="control_margin_leftRight">14.0dp</dimen>
+    <dimen name="group_control_margin_top">9.0dp</dimen>
+    <dimen name="control_margin_top">24.0dp</dimen>
+    <dimen name="title_text_size">22.0sp</dimen>
+    <dimen name="normal_text_size">15.0sp</dimen>
+    <dimen name="edit_text_size">15.0sp</dimen>
+    <dimen name="edit_text_padding">3.0sp</dimen>
+    <dimen name="list_mid_text_size">14.0sp</dimen>
+    <dimen name="personaldetail_item_height">45.0dp</dimen>
+    <dimen name="locator_margin">8.0dp</dimen>
+    <dimen name="textsize1">20.0dp</dimen>
+    <dimen name="edittext_name_size">20.0dp</dimen>
+    <dimen name="button_ok_text_size">18.0dp</dimen>
+    <dimen name="button_delimiter_margin">10.0dp</dimen>
+    <dimen name="login_textview_height">45.0dp</dimen>
+    <dimen name="contact_margin_left">20.0dp</dimen>
+    <dimen name="contact_margin_right">28.0dp</dimen>
+    <dimen name="contact_delimiter_height">6.0dp</dimen>
+    <dimen name="contact_control_margin">3.0dp</dimen>
+    <dimen name="msg_checkbox_name_size">15.0sp</dimen>
 </resources>

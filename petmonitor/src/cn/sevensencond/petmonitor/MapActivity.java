@@ -104,28 +104,6 @@ public class MapActivity extends Activity {
         myLocationOverlay.enableCompass();
         // 修改定位数据后刷新图层生效
         mMapView.refresh();
-
-//        MKMapStatusChangeListener mylistener = new MKMapStatusChangeListener() {
-//            public void onMapStatusChange(MKMapStatus mapStatus) {
-//                float zoom = mapStatus.zoom; // 地图缩放等级
-//                int overlooking = mapStatus.overlooking; // 地图俯视角度
-//                int rotate = mapStatus.rotate; // 地图旋转角度
-//                GeoPoint targetGeo = mapStatus.targetGeo; // 中心点的地理坐标
-//                Point targetScreen = mapStatus.targetScreen; // 中心点的屏幕坐标
-//                // TODO add your process
-//                
-//                Projection projection = mMapView.getProjection();
-//                int circleLeftX = targetScreen.x * 2 / 10;
-//                GeoPoint gPoint = projection.fromPixels(circleLeftX, targetScreen.y);
-//                Log.d("Some", "gPoint is: "+ gPoint);
-//
-//                double distance = DistanceUtil.getDistance(gPoint, targetGeo);
-//                Log.d("Some", "distance is: "+distance);
-//                
-//            }
-//        };
-//        // 为 mapview 注册地图状态监听者。
-//        mMapView.regMapStatusChangeListener(mylistener);
         
         MKMapViewListener mapViewListener = new MKMapViewListener() {    
             
