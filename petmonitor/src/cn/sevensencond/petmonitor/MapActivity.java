@@ -1,4 +1,4 @@
-﻿package cn.sevensencond.petmonitor;
+package cn.sevensencond.petmonitor;
 
 import android.R.integer;
 import android.app.Activity;
