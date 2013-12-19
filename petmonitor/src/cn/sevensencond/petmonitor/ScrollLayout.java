@@ -1,4 +1,4 @@
-package cn.sevensencond.petmonitor;
+ï»¿package cn.sevensencond.petmonitor;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Scroller;
 
 /**
- * ·ÂLauncherÖĞµÄWorkSapce£¬¿ÉÒÔ×óÓÒ»¬¶¯ÇĞ»»ÆÁÄ»µÄÀà
+ * ä»¿Launcherä¸­çš„WorkSapceï¼Œå¯ä»¥å·¦å³æ»‘åŠ¨åˆ‡æ¢å±å¹•çš„ç±»
  * 
  */
 public class ScrollLayout extends ViewGroup {
@@ -196,7 +196,7 @@ public class ScrollLayout extends ViewGroup {
                 // Fling enough to move right
                 Log.e(TAG, "snap right");
                 onScreenChangeListener.onScreenChange(mCurScreen + 1);
-                // Ö»ÍùÓÒÒÆ¶¯²Å¼ÓÔØÊı¾İ
+                // åªå¾€å³ç§»åŠ¨æ‰åŠ è½½æ•°æ®
                 onScreenChangeListenerDataLoad.onScreenChange(mCurScreen + 1);
                 snapToScreen(mCurScreen + 1);
             } else {
@@ -257,7 +257,7 @@ public class ScrollLayout extends ViewGroup {
         return mTouchState != TOUCH_STATE_REST;
     }
 
-    // ·ÖÒ³¼àÌı
+    // åˆ†é¡µç›‘å¬
     public interface OnScreenChangeListener {
         void onScreenChange(int currentIndex);
     }
@@ -269,7 +269,7 @@ public class ScrollLayout extends ViewGroup {
         this.onScreenChangeListener = onScreenChangeListener;
     }
 
-    // ¶¯Ì¬Êı¾İ¼àÌı
+    // åŠ¨æ€æ•°æ®ç›‘å¬
     public interface OnScreenChangeListenerDataLoad {
         void onScreenChange(int currentIndex);
     }
