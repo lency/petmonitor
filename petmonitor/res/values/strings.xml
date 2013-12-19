@@ -23,5 +23,9 @@
     <string name="register">注册</string>
     <string name="login">登录</string>
     <string name="forget_password">忘记密码</string>
+    <string name="no_tracer_tips">还没有定位器，请点击添加</string>
+    <string name="connecting_network">正在联网,请稍候...</string>
+    <string name="my_friend_list">好友列表</string>
+    <string name="no_friend_tips">还没有好友，请点击添加</string>
 
 </resources>

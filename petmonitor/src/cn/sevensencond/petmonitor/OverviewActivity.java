@@ -5,13 +5,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+import cn.sevensencond.petmonitor.ScrollLayout.OnScreenChangeListener;
+import cn.sevensencond.petmonitor.ScrollLayout.OnScreenChangeListenerDataLoad;
 
 public class OverviewActivity extends Activity {
 
@@ -25,18 +24,33 @@ public class OverviewActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.overview);
 
-        CustomList adapter = new CustomList(OverviewActivity.this, web, imageId);
-        list = (ListView) findViewById(R.id.mylist);
-        list.setAdapter(adapter);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        ScrollLayout scrollLayout = (ScrollLayout)findViewById(R.id.main_viewflipper);
+        scrollLayout.setOnScreenChangeListener(new OnScreenChangeListener() {
+            
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                    int position, long id) {
-                Toast.makeText(OverviewActivity.this,
-                        "You Clicked at " + web[+position], Toast.LENGTH_SHORT)
-                        .show();
+            public void onScreenChange(int currentIndex) {
+                // TODO Auto-generated method stub
+                
             }
         });
+        scrollLayout.setOnScreenChangeListenerDataLoad(new OnScreenChangeListenerDataLoad() {
+            @Override
+            public void onScreenChange(int currentIndex) {
+                
+            }
+        });
+//        CustomList adapter = new CustomList(OverviewActivity.this, web, imageId);
+//        list = (ListView) findViewById(R.id.main_listview_devices);
+//        list.setAdapter(adapter);
+//        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view,
+//                    int position, long id) {
+//                Toast.makeText(OverviewActivity.this,
+//                        "You Clicked at " + web[+position], Toast.LENGTH_SHORT)
+//                        .show();
+//            }
+//        });
     }
 
     // @Override

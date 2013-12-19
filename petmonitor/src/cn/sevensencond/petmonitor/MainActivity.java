@@ -23,7 +23,7 @@ public class MainActivity extends Activity {
         server.check_login(new serverHandle() {
             @Override
             public void onSuccess(String result) {
-                setContentView(R.layout.login);
+                setContentView(R.layout.welcome);
                 return;
                 
 //                petserver.userinfo ui = server.ui;

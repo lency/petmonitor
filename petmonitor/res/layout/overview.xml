@@ -1,217 +1,428 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main_linearLayout"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_framelayout"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@drawable/backbg"
-    android:orientation="vertical" >
-
-    <RelativeLayout
-        android:id="@+id/main_linear_myself"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/locator_margin" >
-
-        <ImageView
-            android:id="@+id/main_img_myselfhead"
-            android:contentDescription="@string/stubImageDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/locator_margin"
-            android:background="@drawable/bigheader" />
-
-        <LinearLayout
-            android:id="@+id/linearLayout_name"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/main_img_myselfhead"
-            android:layout_marginLeft="16.0dip"
-            android:layout_toRightOf="@+id/main_img_myselfhead"
-            android:orientation="vertical" >
-
-            <RelativeLayout
-                android:id="@+id/relativelayout_name"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:id="@+id/main_text_myselfname"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/listtext"
-                    android:textSize="@dimen/textsize1"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:id="@+id/user_personal_setting"
-                    android:contentDescription="@string/stubImageDescription"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20.0dip"
-                    android:layout_toRightOf="@+id/main_text_myselfname"
-                    android:background="@drawable/user_setting" />
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/main_text_myselfnumber"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/littletext"
-                android:textSize="13.0sp" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/map_selector"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="3.0dip"
-            android:background="@drawable/map_baidu"
-            android:visibility="gone" />
-    </RelativeLayout>
+    android:layout_height="fill_parent" >
 
     <LinearLayout
-        android:id="@+id/buttons_linear"
-        android:layout_width="fill_parent"
-        android:layout_height="70.0dip"
-        android:layout_marginLeft="@dimen/locator_margin"
-        android:layout_marginRight="@dimen/locator_margin"
-        android:background="@drawable/locator_buttonbg"
-        android:orientation="horizontal"
-        android:paddingLeft="3.0dip"
-        android:paddingRight="3.0dip" >
-
-        <ImageButton
-            android:id="@+id/main_button_tracks"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:contentDescription="@string/stubImageDescription"
-            android:background="@android:color/transparent"
-            android:src="@drawable/locator_track" />
-
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0" />
-
-        <ImageButton
-            android:id="@+id/main_button_addspot"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:contentDescription="@string/stubImageDescription"
-            android:background="@android:color/transparent"
-            android:src="@drawable/locator_add" />
-
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0" />
-
-        <ImageButton
-            android:id="@+id/main_button_msg_center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:contentDescription="@string/stubImageDescription"
-            android:background="@android:color/transparent"
-            android:src="@drawable/locator_msg_center" />
-
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0" />
-
-        <ImageButton
-            android:id="@+id/main_button_switch_user"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:contentDescription="@string/stubImageDescription"
-            android:background="@android:color/transparent"
-            android:src="@drawable/locator_switchuser" />
-
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0" />
-
-        <ImageButton
-            android:id="@+id/main_button_more"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:contentDescription="@string/stubImageDescription"
-            android:background="@android:color/transparent"
-            android:src="@drawable/locator_more" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout_listview"
+        android:id="@+id/main_linearLayout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginLeft="@dimen/locator_margin"
-        android:background="@drawable/locator_border"
-        android:baselineAligned="false"
+        android:background="@drawable/backbg"
         android:orientation="vertical" >
 
         <RelativeLayout
-            android:id="@+id/relativeLayout_uparrow"
+            android:id="@+id/main_linear_myself"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/locator_margin" >
+            android:layout_height="90.0dip"
+            android:layout_marginTop="@dimen/locator_margin" >
 
-            <TextView
-                android:id="@+id/loctor_desc_tittle"
-                style="@style/title"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:gravity="center"
-                android:text="@string/locator_desc_tittle" />
+            <ImageView
+                android:id="@+id/main_img_myselfhead"
+                android:layout_width="81.0dip"
+                android:layout_height="80.0dip"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/locator_margin"
+                android:background="@drawable/bigheader" />
 
-            <!-- <Button
-                android:id="@+id/main_uparrow"
-                style="@style/arrow_up"
-                android:layout_below="@+id/loctor_desc_tittle"
-                android:layout_centerHorizontal="true"
-                android:visibility="visible" /> -->
+            <LinearLayout
+                android:id="@+id/linearLayout_name"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/main_img_myselfhead"
+                android:layout_marginLeft="16.0dip"
+                android:layout_toRightOf="@+id/main_img_myselfhead"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:id="@+id/relativelayout_name"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/main_text_myselfname"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/listtext"
+                        android:textSize="@dimen/textsize1"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/user_personal_setting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20.0dip"
+                        android:layout_toRightOf="@+id/main_text_myselfname"
+                        android:background="@drawable/user_setting" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/main_text_myselfnumber"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/littletext"
+                    android:textSize="13.0sp" />
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/map_selector"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="3.0dip"
+                android:contentDescription="@string/stubImageDescription"
+                android:background="@android:color/transparent"
+                android:src="@drawable/map_baidu" />
         </RelativeLayout>
 
-        <ListView
-            android:id="@+id/mylist"
+        <LinearLayout
+            android:id="@+id/buttons_linear"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20.0dip"
-            android:layout_marginLeft="6.0dip"
-            android:layout_marginRight="12.0dip"
-            android:cacheColorHint="@color/listviewCacheColor"
-            android:divider="@drawable/trackor_line"
-            android:scrollbars="none" />
+            android:layout_height="70.0dip"
+            android:layout_marginLeft="@dimen/locator_margin"
+            android:layout_marginRight="@dimen/locator_margin"
+            android:background="@drawable/locator_buttonbg"
+            android:orientation="horizontal"
+            android:paddingLeft="3.0dip"
+            android:paddingRight="3.0dip" >
 
-        <!-- <RelativeLayout
-            android:id="@+id/relativeLayout_downarrow"
+            <ImageButton
+                android:id="@+id/main_button_switch_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@string/stubImageDescription"
+                android:background="@android:color/transparent"
+                android:src="@drawable/button_back" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0" />
+
+            <ImageButton
+                android:id="@+id/main_button_addspot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@string/stubImageDescription"
+                android:background="@android:color/transparent"
+                android:src="@drawable/locator_add" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0" />
+
+            <ImageButton
+                android:id="@+id/main_button_msg_center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@string/stubImageDescription"
+                android:background="@android:color/transparent"
+                android:src="@drawable/locator_msg_center" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0" />
+
+            <ImageButton
+                android:id="@+id/main_button_switch_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@string/stubImageDescription"
+                android:background="@android:color/transparent"
+                android:src="@drawable/locator_switchuser" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0" />
+
+            <ImageButton
+                android:id="@+id/main_button_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@string/stubImageDescription"
+                android:background="@android:color/transparent"
+                android:src="@drawable/locator_more" />
+        </LinearLayout>
+
+        <FrameLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="0.0dip"
+            android:layout_marginLeft="@dimen/locator_margin"
+            android:layout_weight="1.0" >
 
-            <Button
-                android:id="@+id/main_downarrow"
-                style="@style/arrow_down"
-                android:layout_centerInParent="true"
-                android:visibility="visible" />
-        </RelativeLayout> -->
+            <cn.sevensencond.petmonitor.ScrollLayout
+                android:id="@+id/main_viewflipper"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" >
+
+                <LinearLayout
+                    android:id="@+id/linearLayout_devices"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical" >
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout_listview_devices"
+                        android:layout_width="fill_parent"
+                        android:layout_height="0.0dip"
+                        android:layout_marginLeft="@dimen/locator_margin"
+                        android:layout_weight="1.0"
+                        android:background="@drawable/locator_border"
+                        android:baselineAligned="false"
+                        android:orientation="vertical" >
+
+                        <RelativeLayout
+                            android:id="@+id/relativeLayout__devices_uparrow"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/locator_margin" >
+
+                            <RelativeLayout
+                                android:id="@+id/RelativeLayout_devices_title"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentTop="true" >
+
+                                <TextView
+                                    android:id="@+id/devices_view_title"
+                                    style="@style/title"
+                                    android:layout_centerHorizontal="true"
+                                    android:text="@string/locator_desc_tittle" />
+                            </RelativeLayout>
+
+                            <Button
+                                android:id="@+id/devices_view_uparrow"
+                                style="@style/arrow_up"
+                                android:layout_below="@+id/RelativeLayout_devices_title"
+                                android:layout_centerHorizontal="true"
+                                android:visibility="invisible" />
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:id="@+id/devices_none_tips"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_marginLeft="6.0dip"
+                            android:layout_marginRight="12.0dip"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="6.0dip"
+                                android:text="@string/no_tracer_tips"
+                                android:textColor="@color/littletext"
+                                android:textSize="18.0sp" />
+
+                            <Button
+                                android:id="@+id/devices_none_click"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/locator_add" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/devices_view_tips"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_marginLeft="6.0dip"
+                            android:layout_marginRight="12.0dip"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:visibility="gone" >
+
+                            <ProgressBar
+                                android:id="@+id/devices_progressbar"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:indeterminate="false"
+                                android:indeterminateDrawable="@drawable/progressbar_small_color" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="6.0dip"
+                                android:text="@string/connecting_network"
+                                android:textColor="@color/littletext"
+                                android:textSize="15.0sp" />
+                        </LinearLayout>
+
+                        <ListView
+                            android:id="@+id/main_listview_devices"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_marginBottom="20.0dip"
+                            android:layout_marginLeft="6.0dip"
+                            android:layout_marginRight="12.0dip"
+                            android:cacheColorHint="@color/listviewCacheColor"
+                            android:divider="@drawable/trackor_line"
+                            android:scrollbars="none" />
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/relativeLayout_devices_downarrow"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
+
+                        <Button
+                            android:id="@+id/devices_view_downarrow"
+                            style="@style/arrow_down"
+                            android:layout_centerInParent="true"
+                            android:visibility="invisible" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayout_friends"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical" >
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout_listview_friends"
+                        android:layout_width="fill_parent"
+                        android:layout_height="0.0dip"
+                        android:layout_marginLeft="@dimen/locator_margin"
+                        android:layout_weight="1.0"
+                        android:background="@drawable/locator_border"
+                        android:baselineAligned="false"
+                        android:orientation="vertical" >
+
+                        <RelativeLayout
+                            android:id="@+id/relativeLayout__friends_uparrow"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/locator_margin" >
+
+                            <RelativeLayout
+                                android:id="@+id/RelativeLayout_friends_title"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentTop="true" >
+
+                                <TextView
+                                    android:id="@+id/friends_view_title"
+                                    style="@style/title"
+                                    android:layout_centerHorizontal="true"
+                                    android:text="@string/my_friend_list" />
+                            </RelativeLayout>
+
+                            <Button
+                                android:id="@+id/friends_view_uparrow"
+                                style="@style/arrow_up"
+                                android:layout_below="@+id/RelativeLayout_friends_title"
+                                android:layout_centerHorizontal="true"
+                                android:visibility="invisible" />
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:id="@+id/friends_none_tips"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_marginLeft="6.0dip"
+                            android:layout_marginRight="12.0dip"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="6.0dip"
+                                android:text="@string/no_friend_tips"
+                                android:textColor="@color/littletext"
+                                android:textSize="18.0sp" />
+
+                            <Button
+                                android:id="@+id/friends_none_click"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/locator_add" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/friends_view_tips"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_marginLeft="6.0dip"
+                            android:layout_marginRight="12.0dip"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:visibility="gone" >
+
+                            <ProgressBar
+                                android:id="@+id/friends_progressbar"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:indeterminate="false"
+                                android:indeterminateDrawable="@drawable/progressbar_small_color" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="6.0dip"
+                                android:text="@string/connecting_network"
+                                android:textColor="@color/littletext"
+                                android:textSize="15.0sp" />
+                        </LinearLayout>
+
+                        <ListView
+                            android:id="@+id/main_listview_friends"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_marginBottom="20.0dip"
+                            android:layout_marginLeft="6.0dip"
+                            android:layout_marginRight="12.0dip"
+                            android:cacheColorHint="@color/listviewCacheColor"
+                            android:divider="@drawable/trackor_line"
+                            android:scrollbars="none" />
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/relativeLayout_friends_downarrow"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
+
+                        <Button
+                            android:id="@+id/friends_view_downarrow"
+                            style="@style/arrow_down"
+                            android:layout_centerInParent="true"
+                            android:visibility="invisible" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </cn.sevensencond.petmonitor.ScrollLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" >
+
+                <ImageView
+                    android:id="@+id/imgnav_friend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="12.0dip"
+                    android:src="@drawable/nav2" />
+
+                <ImageView
+                    android:id="@+id/imgnav_dev"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="30.0dip"
+                    android:layout_toLeftOf="@+id/imgnav_friend"
+                    android:src="@drawable/nav2" />
+            </RelativeLayout>
+        </FrameLayout>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/main_text_nospot"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100.0dip"
-        android:gravity="center"
-        android:text="@string/nospot_label"
-        android:textColor="@color/edit_gray_text"
-        android:textSize="20.0dip" />
-
-</LinearLayout>
+</FrameLayout>
