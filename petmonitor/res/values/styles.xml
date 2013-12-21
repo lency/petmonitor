@@ -17,11 +17,11 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
-    <style name="whereru_widget">
+    <style name="petmonitor_widget">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
-    <style name="title_base" parent="@style/whereru_widget">
+    <style name="title_base" parent="@style/petmonitor_widget">
         <item name="android:textSize">@dimen/title_text_size</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/title</item>
@@ -30,11 +30,15 @@
     <style name="title" parent="@style/title_base">
         <item name="android:background">@drawable/title_bg</item>
     </style>
-    <style name="arrow_up" parent="@style/whereru_widget">
-        <item name="android:background">@drawable/arrow_up</item>
+    <style name="image_button" parent="@style/petmonitor_widget">
+        <item name="android:contentDescription">@string/stubImageDescription</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
-    <style name="arrow_down" parent="@style/whereru_widget">
-        <item name="android:background">@drawable/arrow_down</item>
+    <style name="arrow_up" parent="@style/image_button">
+        <item name="android:src">@drawable/arrow_up</item>
+    </style>
+    <style name="arrow_down" parent="@style/image_button">
+        <item name="android:src">@drawable/arrow_down</item>
     </style>
     <style name="edittext_name_base">
         <item name="android:textSize">@dimen/edittext_name_size</item>
@@ -55,7 +59,7 @@
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
-    <style name="button_normal" parent="@style/whereru_widget">
+    <style name="button_normal" parent="@style/petmonitor_widget">
         <item name="android:textSize">@dimen/button_ok_text_size</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/button_text</item>
