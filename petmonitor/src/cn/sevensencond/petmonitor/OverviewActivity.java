@@ -1,5 +1,6 @@
 package cn.sevensencond.petmonitor;
 
+import android.R.integer;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -128,6 +129,12 @@ public class OverviewActivity extends Activity {
     // getMenuInflater().inflate(R.menu.overview, menu);
     // return true;
     // }
+    
+    public void switchUser(View view) {
+        ScrollLayout scrollLayout = (ScrollLayout) findViewById(R.id.main_viewflipper);
+        int snapToScreenIndex = (scrollLayout.getCurScreen() == 0)? 1 : 0;
+        scrollLayout.snapToScreen(snapToScreenIndex);
+    }
 
     public class CustomList extends ArrayAdapter<String> {
         private final Activity context;
