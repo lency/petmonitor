@@ -10,7 +10,6 @@
     <string name="stubImageDescription">Image</string>
     <string name="title_activity_overview">OverviewActivity</string>
     <string name="button_overview">Overview</string>
-    
     <string name="locator_desc_tittle">设备列表</string>
     <string name="nospot_label">您还没有添加任何pet</string>
     <string name="title_login">用户登录</string>
@@ -27,5 +26,41 @@
     <string name="connecting_network">正在联网,请稍候...</string>
     <string name="my_friend_list">好友列表</string>
     <string name="no_friend_tips">还没有好友，请点击添加</string>
+    <string name="getlocationpleasewaiting">正在获取位置信息...</string>
+    <string name="last_location_info">最新位置信息</string>
+    <string name="last_location_time">时间:</string>
+    <string name="last_location_status">状态:</string>
+    <string name="last_location_address">地址:</string>
+    <string name="title_activity_device_page">DevicePageActivity</string>
+    <string name="location_label">目标定位</string>
+    <string name="locationdesc_label">查看目标的最近一次位置信息</string>
+    <string name="history">历史轨迹</string>
+    <string name="history_desc">查看目标任意8小时内的运动轨迹</string>
+    <string name="fence">电子围栏</string>
+    <string name="fence_desc">设定目标出入的区域范围，并提供报警通知</string>
+    <string name="fencein">进入围栏报警</string>
+    <string name="fenceout">离开围栏报警</string>
+    <string name="gps_status">卫星定位</string>
+    <string name="gps_status_desc">打开或关闭目标GPS卫星定位。注：定位精度高、较费电</string>
+    <string name="gps_enable">GPS已打开</string>
+    <string name="gps_disable">GPS已关闭</string>
+    <string name="cancel_share">取消分享</string>
+    <string name="cancel_share_desc">取消分享并清除相关数据</string>
+    <string name="delete_label">删除</string>
+    <string name="deletedesc_label">解绑定并清除相关设置</string>
+    <string name="trackormode_desc">目标追踪模式设置</string>
+    <string name="trackormode">定位频度</string>
+    <string name="trackorsos">紧急联系人</string>
+    <string name="sossetting">SOS紧急呼叫联系人设置</string>
+    <string name="following">紧急追踪</string>
+    <string name="follow_desc">在指定时间内快速更新目标的运动轨迹。注：比较费电</string>
+    <string name="setting_label">设备信息设置</string>
+    <string name="locator_control">控制号码</string>
+    <string name="locator_serial">设备绑定号</string>
+    <string name="locator_name">设备昵称</string>
+    <string name="locator_number">设备SIM卡号</string>
+    <string name="advancesetting">高级设置</string>
+    <string name="advancesetting_tips">手动设置设备的互联网接入点与时区（默认为北京时间）</string>
+    <string name="title_activity_device_setting">DeviceSettingActivity</string>
 
 </resources>

@@ -103,6 +103,14 @@
             android:name="cn.sevensencond.petmonitor.OverviewActivity"
             android:label="@string/title_activity_overview" >
         </activity>
+        <activity
+            android:name="cn.sevensencond.petmonitor.DevicePageActivity"
+            android:label="@string/title_activity_device_page" >
+        </activity>
+        <activity
+            android:name="cn.sevensencond.petmonitor.DeviceSettingActivity"
+            android:label="@string/title_activity_device_setting" >
+        </activity>
     </application>
 
 </manifest>

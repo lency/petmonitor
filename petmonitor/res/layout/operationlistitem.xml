@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/operationlistitem_linear"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/listitem_bg"
+    android:paddingBottom="3.0dip"
+    android:paddingRight="3.0dip"
+    android:paddingTop="3.0dip" >
+
+    <ImageView
+        android:id="@+id/operationlisteitem_img_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="@dimen/control_margin_leftRight"
+        android:layout_marginRight="@dimen/control_margin_leftRight" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/operationlisteitem_img_icon"
+        android:layout_toRightOf="@+id/operationlisteitem_img_icon" >
+
+        <TextView
+            android:id="@+id/operationlisteitem_text_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/listtext"
+            android:textSize="20.0sp" />
+
+        <TextView
+            android:id="@+id/operationlisteitem_text_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/operationlisteitem_text_title"
+            android:textColor="@color/littletext"
+            android:textSize="13.0sp" />
+
+        <TextView
+            android:id="@+id/operationlisteitem_text_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/control_margin_leftRight"
+            android:textColor="@color/littletext"
+            android:textSize="13.0sp" />
+    </RelativeLayout>
+
+</RelativeLayout>

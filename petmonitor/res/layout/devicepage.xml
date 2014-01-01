@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/devicepage_framelayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/backbg"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/spotpage_Relativelayout_top"
+            android:layout_width="fill_parent"
+            android:layout_height="90.0dip"
+            android:layout_marginLeft="@dimen/locator_margin"
+            android:layout_marginTop="@dimen/locator_margin" >
+
+            <FrameLayout
+                android:id="@+id/spotpage_framelayout_header_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:id="@+id/spotpage_image_head"
+                    android:layout_width="81.0dip"
+                    android:layout_height="80.0dip"
+                    android:src="@drawable/bigheader" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/spotpage_framelayout_header_img"
+                android:layout_marginLeft="14.0dip"
+                android:layout_toRightOf="@+id/spotpage_framelayout_header_img"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/spotpage_text_name"
+                        android:layout_width="100.0dip"
+                        android:layout_height="40.0dip"
+                        android:layout_alignParentTop="true"
+                        android:gravity="center_vertical"
+                        android:singleLine="true"
+                        android:textColor="@color/listtext"
+                        android:textSize="@dimen/textsize1"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/spotpage_personal_setting"
+                        android:layout_width="25.0dip"
+                        android:layout_height="25.0dip"
+                        android:layout_marginLeft="14.0dip"
+                        android:layout_marginTop="4.0dip"
+                        android:layout_toRightOf="@+id/spotpage_text_name"
+                        android:background="@drawable/user_setting" />
+
+                    <ImageView
+                        android:id="@+id/spotpage_image_battery"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="14.0dip"
+                        android:layout_marginTop="4.0dip"
+                        android:layout_toRightOf="@+id/spotpage_personal_setting"
+                        android:src="@drawable/batterynormal" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/spotpage_phone_number"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="4.0dip"
+                    android:textColor="@color/littletext"
+                    android:textSize="13.0sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/spotpage_text_number"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="4.0dip"
+                    android:textColor="@color/littletext"
+                    android:textSize="13.0sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/spotpage_share"
+                android:layout_width="40.0dip"
+                android:layout_height="40.0dip"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10.0dip"
+                android:background="@drawable/share" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/devicepage_linear_getLocation"
+            android:layout_width="fill_parent"
+            android:layout_height="80.0dip"
+            android:layout_marginLeft="@dimen/locator_margin"
+            android:layout_marginRight="@dimen/locator_margin"
+            android:background="@drawable/msg_bg"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <ProgressBar
+                android:id="@+id/spotpage_progress_getLocation"
+                style="@android:style/Widget.ProgressBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="false"
+                android:indeterminateDrawable="@drawable/progressbar_small_color" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6.0dip"
+                android:text="@string/getlocationpleasewaiting"
+                android:textColor="@color/littletext"
+                android:textSize="13.0sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/devicepage_linear_locationInfo"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/locator_margin"
+            android:layout_marginRight="@dimen/locator_margin"
+            android:background="@drawable/msg_bg"
+            android:orientation="vertical"
+            android:paddingLeft="15.0dip"
+            android:paddingRight="15.0dip" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="15.0dip"
+                android:background="@drawable/update_time_bg"
+                android:text="@string/last_location_info"
+                android:textColor="@color/black" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="6.0dip"
+                android:background="@drawable/trackor_line" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10.0dip"
+                    android:text="@string/last_location_time"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/last_location_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15.0dip"
+                    android:textColor="@color/littletext"
+                    android:textSize="16.0sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="6.0dip"
+                android:background="@drawable/trackor_line" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10.0dip"
+                    android:text="@string/last_location_status"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/last_location_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15.0dip"
+                    android:textColor="@color/littletext"
+                    android:textSize="16.0sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="6.0dip"
+                android:background="@drawable/trackor_line" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10.0dip"
+                    android:text="@string/last_location_address"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/last_location_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15.0dip"
+                    android:textColor="@color/littletext"
+                    android:textSize="16.0sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/spotpage_uparrow"
+            style="@style/arrow_up"
+            android:layout_gravity="center_horizontal"
+            android:visibility="invisible" />
+
+        <ListView
+            android:id="@+id/spotpage_listview_operation"
+            android:layout_width="fill_parent"
+            android:layout_height="0.0dip"
+            android:layout_marginLeft="@dimen/locator_margin"
+            android:layout_marginRight="@dimen/locator_margin"
+            android:layout_weight="1.0"
+            android:cacheColorHint="@color/listviewCacheColor"
+            android:scrollbars="none" />
+
+        <TextView
+            android:id="@+id/spotpage_downarrow"
+            style="@style/arrow_down"
+            android:layout_gravity="center_horizontal"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+</FrameLayout>

@@ -1,8 +1,9 @@
 package cn.sevensencond.petmonitor;
 
-import android.R.integer;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,6 +58,17 @@ public class OverviewActivity extends Activity {
         }
     };
     
+    private AdapterView.OnItemClickListener listViewItemClickListener = new AdapterView.OnItemClickListener() {
+        public void onItemClick(AdapterView<?> parent, View paramView, int position, long id) {
+            ArrayAdapter<String> parentAdapter = (ArrayAdapter<String>)parent.getAdapter();
+            Log.d("List", "onListItemClick,position = " + position
+                    + " count = " + parentAdapter.getCount());
+            
+            Intent intent = new Intent(OverviewActivity.this, DevicePageActivity.class);
+            startActivity(intent);
+        }
+    };
+    
     private ImageView mImgNavDev = null;
     private ImageView mImgNavFriend = null;
 
@@ -93,12 +105,17 @@ public class OverviewActivity extends Activity {
         CustomList adapter = new CustomList(OverviewActivity.this, web, imageId);
         devicesListView = (ListView) findViewById(R.id.main_listview_devices);
         devicesListView.setAdapter(adapter);
+//        devicesListView.setOnItemClickListener(listViewItemClickListener);
         devicesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(OverviewActivity.this,
-                        "You Clicked at " + web[+position], Toast.LENGTH_SHORT)
-                        .show();
+                ArrayAdapter<String> parentAdapter = (ArrayAdapter<String>)parent.getAdapter();
+                Log.d("List", "onListItemClick,position = " + position
+                        + " count = " + parentAdapter.getCount());
+                
+                Intent intent = new Intent(OverviewActivity.this, DevicePageActivity.class);
+                startActivity(intent);
+                
             }
         });
         
