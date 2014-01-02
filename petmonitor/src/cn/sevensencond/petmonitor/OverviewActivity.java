@@ -1,9 +1,11 @@
 package cn.sevensencond.petmonitor;
 
 import android.app.Activity;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +16,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 import cn.sevensencond.petmonitor.ScrollLayout.OnScreenChangeListener;
 import cn.sevensencond.petmonitor.ScrollLayout.OnScreenChangeListenerDataLoad;
 
@@ -79,6 +82,8 @@ public class OverviewActivity extends Activity {
         
         mImgNavDev = (ImageView)findViewById(R.id.imgnav_dev);
         mImgNavFriend = (ImageView)findViewById(R.id.imgnav_friend);
+        mImgNavDev.setImageResource(R.drawable.nav1);
+        mImgNavFriend.setImageResource(R.drawable.nav2);
 
         ScrollLayout scrollLayout = (ScrollLayout) findViewById(R.id.main_viewflipper);
         scrollLayout.setOnScreenChangeListener(new OnScreenChangeListener() {
@@ -101,17 +106,27 @@ public class OverviewActivity extends Activity {
 
             }
         });
+        
+        genListData();
 
-        CustomList adapter = new CustomList(OverviewActivity.this, web, imageId);
+        final DBHelper helpter = new DBHelper(this);
+        Cursor c = helpter.query();
+        String[] from = { "name", "phoneNumber"};
+        int[] to = { R.id.mylistitem_text_name, R.id.mylistitem_text_number };
+        CustomCursorAdapter adapter = new CustomCursorAdapter(OverviewActivity.this, c, from, to);
+//        ListView listView = getListView();  
+//        listView.setAdapter(adapter);
+        
+//        CustomList adapter = new CustomList(OverviewActivity.this, web, imageId);
         devicesListView = (ListView) findViewById(R.id.main_listview_devices);
         devicesListView.setAdapter(adapter);
 //        devicesListView.setOnItemClickListener(listViewItemClickListener);
         devicesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ArrayAdapter<String> parentAdapter = (ArrayAdapter<String>)parent.getAdapter();
-                Log.d("List", "onListItemClick,position = " + position
-                        + " count = " + parentAdapter.getCount());
+//                SimpleCursorAdapter parentAdapter = (SimpleCursorAdapter)parent.getAdapter();
+//                Log.d("List", "onListItemClick,position = " + position
+//                        + " count = " + parentAdapter.getCount());
                 
                 Intent intent = new Intent(OverviewActivity.this, DevicePageActivity.class);
                 startActivity(intent);
@@ -139,13 +154,6 @@ public class OverviewActivity extends Activity {
         
         devicesListView.setOnScrollListener(devicesListViewScrollListener);
     }
-
-    // @Override
-    // public boolean onCreateOptionsMenu(Menu menu) {
-    // // Inflate the menu; this adds items to the action bar if it is present.
-    // getMenuInflater().inflate(R.menu.overview, menu);
-    // return true;
-    // }
     
     public void switchUser(View view) {
         ScrollLayout scrollLayout = (ScrollLayout) findViewById(R.id.main_viewflipper);
@@ -179,6 +187,66 @@ public class OverviewActivity extends Activity {
             }
             return rowView;
         }
+    }
+    
+    public class CustomCursorAdapter extends SimpleCursorAdapter {
+        private final Context context;
+        private final String[] from;
+        private final int[] to;
+        
+        private LayoutInflater mInflater; 
+        
+        public CustomCursorAdapter(Context context, Cursor c, String[] from, int[] to) {
+            super(context, R.layout.list_single, c, from, to, 0);
+            this.context = context;
+            this.from = from;
+            this.to = to;
+        }
+        
+        @Override
+        public void bindView(View view, Context context, Cursor cursor) {
+            // TODO Auto-generated method stub
+//            super.bindView(view, context, cursor);
+            RelativeLayout ll = null;
+            if(view==null)
+            {
+              ll = (RelativeLayout) mInflater.inflate(R.layout.list_single, null);
+            }
+            else
+            {
+             ll = (RelativeLayout)view;
+            }
+            
+//            LayoutInflater inflater = LayoutInflater.from(context);
+//            inflater.inflate(R.layout.list_single, null);
+            
+            int nameIndex = cursor.getColumnIndex("name");
+            int phoneIndex = cursor.getColumnIndex("phoneNumber");
+            
+            TextView txtTitle = (TextView)ll.findViewById(R.id.mylistitem_text_name);
+            txtTitle.setText(cursor.getString(nameIndex));
+            TextView phoneNumberTextView = (TextView)ll.findViewById(R.id.mylistitem_text_number);
+            phoneNumberTextView.setText(cursor.getString(phoneIndex));
+            ImageButton imageButton = (ImageButton)ll.findViewById(R.id.mylistitem_button_call);
+            if (cursor.getPosition() == 3) {
+                imageButton.setImageResource(R.drawable.locator_phone_disable);
+            }
+        }
+    }
+    
+    public void genListData() {
+        DBHelper helper = new DBHelper(getApplicationContext());
+        if (helper.query().getCount() == 0) {
+            for (int i = 0; i < web.length; i++) {
+                ContentValues values = new ContentValues();  
+                values.put("name", web[i]);  
+                values.put("ownerName", web[i]);  
+                values.put("serialNumber", "11110000"); 
+                values.put("phoneNumber", "18600000000");
+                helper.insert(values);
+            }
+        }
+        helper.close();
     }
 
 }
