@@ -190,44 +190,33 @@ public class OverviewActivity extends Activity {
     }
     
     public class CustomCursorAdapter extends SimpleCursorAdapter {
-        private final Context context;
-        private final String[] from;
-        private final int[] to;
-        
         private LayoutInflater mInflater; 
         
         public CustomCursorAdapter(Context context, Cursor c, String[] from, int[] to) {
             super(context, R.layout.list_single, c, from, to, 0);
-            this.context = context;
-            this.from = from;
-            this.to = to;
+        }
+        
+        @Override
+        public View newView(Context context, Cursor cursor, ViewGroup parent) {
+            // TODO Auto-generated method stub
+            mInflater = LayoutInflater.from(context);
+            View view = mInflater.inflate(R.layout.list_single, null, true);
+            return view;
         }
         
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
             // TODO Auto-generated method stub
 //            super.bindView(view, context, cursor);
-            RelativeLayout ll = null;
-            if(view==null)
-            {
-              ll = (RelativeLayout) mInflater.inflate(R.layout.list_single, null);
-            }
-            else
-            {
-             ll = (RelativeLayout)view;
-            }
-            
-//            LayoutInflater inflater = LayoutInflater.from(context);
-//            inflater.inflate(R.layout.list_single, null);
             
             int nameIndex = cursor.getColumnIndex("name");
             int phoneIndex = cursor.getColumnIndex("phoneNumber");
             
-            TextView txtTitle = (TextView)ll.findViewById(R.id.mylistitem_text_name);
+            TextView txtTitle = (TextView)view.findViewById(R.id.mylistitem_text_name);
             txtTitle.setText(cursor.getString(nameIndex));
-            TextView phoneNumberTextView = (TextView)ll.findViewById(R.id.mylistitem_text_number);
+            TextView phoneNumberTextView = (TextView)view.findViewById(R.id.mylistitem_text_number);
             phoneNumberTextView.setText(cursor.getString(phoneIndex));
-            ImageButton imageButton = (ImageButton)ll.findViewById(R.id.mylistitem_button_call);
+            ImageButton imageButton = (ImageButton)view.findViewById(R.id.mylistitem_button_call);
             if (cursor.getPosition() == 3) {
                 imageButton.setImageResource(R.drawable.locator_phone_disable);
             }
