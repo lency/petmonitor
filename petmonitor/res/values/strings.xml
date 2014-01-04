@@ -62,5 +62,6 @@
     <string name="advancesetting">高级设置</string>
     <string name="advancesetting_tips">手动设置设备的互联网接入点与时区（默认为北京时间）</string>
     <string name="title_activity_device_setting">DeviceSettingActivity</string>
+    <string name="logged">已登录</string>
 
 </resources>

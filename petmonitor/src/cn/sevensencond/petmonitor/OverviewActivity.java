@@ -1,11 +1,22 @@
 package cn.sevensencond.petmonitor;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import android.R.integer;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,13 +27,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import cn.sevensencond.petmonitor.ScrollLayout.OnScreenChangeListener;
 import cn.sevensencond.petmonitor.ScrollLayout.OnScreenChangeListenerDataLoad;
 
 public class OverviewActivity extends Activity {
+    public static final int UPDATE_STICKER = 1;
 
     ListView devicesListView = null;
     String[] web = { "Google Plus", "Twitter", "Windows", "Bing", "Sun",
@@ -74,11 +85,44 @@ public class OverviewActivity extends Activity {
     
     private ImageView mImgNavDev = null;
     private ImageView mImgNavFriend = null;
+    
+    ImageView mMyselfHead = null;
+    TextView mUserNameText = null;
+    
+    private boolean isDevicesUpdating = false;
+    private boolean isDownloadingUserSticker = false;
+    private String mUserName = "";
+    
+    private ExecutorService downloadService = null;
+    
+    Bitmap mBitmapUserSticker = null;
+    
+    public Handler mHandler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            Log.d("OverviewActivity", "handleMessage " + msg.what);
+            switch (msg.what) {
+            case UPDATE_STICKER:
+                if (mBitmapUserSticker != null) {
+                    int roundPx = (int)(mBitmapUserSticker.getWidth()*0.2);
+                    Bitmap localBitmap = Util.toRoundCorner(mBitmapUserSticker, roundPx);
+                    mMyselfHead.setImageBitmap(localBitmap);
+                }
+                break;
+
+            default:
+                break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.overview);
+        
+        mMyselfHead = (ImageView)findViewById(R.id.main_img_myselfhead);
+        mUserNameText = ((TextView)findViewById(R.id.main_text_myselfname));
+        ((TextView)findViewById(R.id.main_text_myselfnumber)).setText(R.string.logged);
         
         mImgNavDev = (ImageView)findViewById(R.id.imgnav_dev);
         mImgNavFriend = (ImageView)findViewById(R.id.imgnav_friend);
@@ -153,6 +197,64 @@ public class OverviewActivity extends Activity {
         }
         
         devicesListView.setOnScrollListener(devicesListViewScrollListener);
+        
+        downloadService = Executors.newSingleThreadExecutor();
+    }
+    
+    @Override
+    protected void onResume() {
+        // TODO Auto-generated method stub
+        mUserName  = "xiaopeng";
+        mUserNameText.setText(mUserName);
+        if (!isDownloadingUserSticker )
+        {
+            updateUserSticker();
+        }
+//        Util.sendMessage(this.mHandler, 73, null);
+        super.onResume();
+    }
+    
+    @Override
+    protected void onDestroy() {
+        // TODO Auto-generated method stub
+        super.onDestroy();
+        downloadService.shutdown();
+    }
+    
+    private void updateUserSticker() {
+        if (downloadService.isShutdown())
+            return;
+        downloadService.submit(new Runnable() {
+            public void run() {
+                isDownloadingUserSticker = true;
+                // TODO test url here
+                String str = "http://pic19.nipic.com/20120222/2457331_222532092398_2.jpg";
+                if (str.length() == 0)
+                    return;
+
+                byte[] arrayOfByte = null;
+
+                try {
+                    if (Util.checkNetwork(OverviewActivity.this)) {
+                        arrayOfByte = Util.getImage(str);
+                        if (arrayOfByte == null)
+                            return;
+                        mBitmapUserSticker = BitmapFactory
+                                .decodeByteArray(arrayOfByte, 0,
+                                        arrayOfByte.length);
+                        Util.saveUserSticker(mBitmapUserSticker);
+                        isDownloadingUserSticker = false;
+                        Util.sendMessage(mHandler, UPDATE_STICKER, null);
+                        return;
+                    }
+                } catch (Exception localException) {
+                    localException.printStackTrace();
+                    isDownloadingUserSticker = false;
+                    return;
+                }
+
+            }
+        });
     }
     
     public void switchUser(View view) {
