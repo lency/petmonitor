@@ -228,12 +228,11 @@ public class OverviewActivity extends Activity {
             public void run() {
                 isDownloadingUserSticker = true;
                 // TODO test url here
-                String str = "http://pic19.nipic.com/20120222/2457331_222532092398_2.jpg";
+                String str = "http://t10.baidu.com/it/u=1707069858,2169216855&fm=21&gp=0.jpg";
                 if (str.length() == 0)
                     return;
 
                 byte[] arrayOfByte = null;
-
                 try {
                     if (Util.checkNetwork(OverviewActivity.this)) {
                         arrayOfByte = Util.getImage(str);
