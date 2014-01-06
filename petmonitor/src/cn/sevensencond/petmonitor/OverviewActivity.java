@@ -1,13 +1,8 @@
 package cn.sevensencond.petmonitor;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import android.R.integer;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
@@ -153,8 +148,8 @@ public class OverviewActivity extends Activity {
         
         genListData();
 
-        final DBHelper helpter = new DBHelper(this);
-        Cursor c = helpter.query();
+        final DBHelper helper = new DBHelper(this);
+        Cursor c = helper.query();
         String[] from = { "name", "phoneNumber"};
         int[] to = { R.id.mylistitem_text_name, R.id.mylistitem_text_number };
         CustomCursorAdapter adapter = new CustomCursorAdapter(OverviewActivity.this, c, from, to);
@@ -168,15 +163,23 @@ public class OverviewActivity extends Activity {
         devicesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                SimpleCursorAdapter parentAdapter = (SimpleCursorAdapter)parent.getAdapter();
-//                Log.d("List", "onListItemClick,position = " + position
-//                        + " count = " + parentAdapter.getCount());
+                CustomCursorAdapter parentAdapter = (CustomCursorAdapter)parent.getAdapter();
+                Log.d("List", "onListItemClick,position = " + position
+                        + " count = " + parentAdapter.getCount());
+                
+                Cursor cursor = parentAdapter.getCursor();
+                int nameIndex = cursor.getColumnIndex("name");
+                String name = cursor.getString(nameIndex);
                 
                 Intent intent = new Intent(OverviewActivity.this, DevicePageActivity.class);
+                Bundle localBundle = new Bundle();
+                localBundle.putString("cn.sevensencond.petmonitor.devicename", name);
+                intent.putExtra("cn.sevensencond.petmonitor.devicePage", localBundle);
                 startActivity(intent);
                 
             }
         });
+        helper.close();
         
         mDevicesNoneTips = findViewById(R.id.devices_none_tips);
         mDevicesViewTips = findViewById(R.id.devices_view_tips);

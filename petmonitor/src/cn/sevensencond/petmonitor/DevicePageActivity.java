@@ -119,6 +119,7 @@ public class DevicePageActivity extends Activity {
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("DevicePage", "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.devicepage);
         
@@ -141,12 +142,15 @@ public class DevicePageActivity extends Activity {
         this.mBatteryImage = ((ImageView)findViewById(R.id.spotpage_image_battery));
         this.mButtonShare = ((Button)findViewById(R.id.spotpage_share));
 //        this.mButtonShare.setOnClickListener(this.clickListener);
+        Bundle localBundle = getIntent().getBundleExtra("cn.sevensencond.petmonitor.devicePage");
+        String deviceName = localBundle.getString("cn.sevensencond.petmonitor.devicename");
+        mSpotName.setText(deviceName);
         
         mLocationInfo.setVisibility(View.VISIBLE);
         mWaitingLinear.setVisibility(View.GONE);
         
         // stub text first
-        mSpotName.setText("075");
+//        mSpotName.setText("075");
         mSpotPhoneNumber.setText("18800000000");
         mSpotNumber.setText("18600000000");
         mLastLocationTime.setText("2012-12-21 00:00:00");
