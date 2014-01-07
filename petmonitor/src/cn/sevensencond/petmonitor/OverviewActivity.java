@@ -1,5 +1,9 @@
 package cn.sevensencond.petmonitor;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -22,6 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import cn.sevensencond.petmonitor.ScrollLayout.OnScreenChangeListener;
@@ -30,6 +35,8 @@ import cn.sevensencond.petmonitor.ScrollLayout.OnScreenChangeListenerDataLoad;
 public class OverviewActivity extends Activity {
     public static final int UPDATE_STICKER = 1;
 
+    private DBManager dbManager = null; 
+    
     ListView devicesListView = null;
     String[] web = { "Google Plus", "Twitter", "Windows", "Bing", "Sun",
             "Oracle" };
@@ -146,13 +153,18 @@ public class OverviewActivity extends Activity {
             }
         });
         
+        dbManager = new DBManager(this);
+        
         genListData();
 
-        final DBHelper helper = new DBHelper(this);
-        Cursor c = helper.query();
-        String[] from = { "name", "phoneNumber"};
-        int[] to = { R.id.mylistitem_text_name, R.id.mylistitem_text_number };
-        CustomCursorAdapter adapter = new CustomCursorAdapter(OverviewActivity.this, c, from, to);
+        List<Device> devices = dbManager.query();
+        CustomList adapter = new CustomList(this, devices);
+        
+//        final DBHelper helper = new DBHelper(this);
+//        Cursor c = helper.query();
+//        String[] from = { "name", "phoneNumber"};
+//        int[] to = { R.id.mylistitem_text_name, R.id.mylistitem_text_number };
+//        CustomCursorAdapter adapter = new CustomCursorAdapter(OverviewActivity.this, c, from, to);
 //        ListView listView = getListView();  
 //        listView.setAdapter(adapter);
         
@@ -163,23 +175,25 @@ public class OverviewActivity extends Activity {
         devicesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                CustomCursorAdapter parentAdapter = (CustomCursorAdapter)parent.getAdapter();
-                Log.d("List", "onListItemClick,position = " + position
-                        + " count = " + parentAdapter.getCount());
-                
-                Cursor cursor = parentAdapter.getCursor();
-                int nameIndex = cursor.getColumnIndex("name");
-                String name = cursor.getString(nameIndex);
+//                CustomCursorAdapter parentAdapter = (CustomCursorAdapter)parent.getAdapter();
+//                Log.d("List", "onListItemClick,position = " + position
+//                        + " count = " + parentAdapter.getCount());
+//                
+//                Cursor cursor = parentAdapter.getCursor();
+//                int nameIndex = cursor.getColumnIndex("name");
+//                String name = cursor.getString(nameIndex);
+                CustomList adapter = (CustomList)parent.getAdapter();
+                Device device = adapter.getItem(position);
                 
                 Intent intent = new Intent(OverviewActivity.this, DevicePageActivity.class);
                 Bundle localBundle = new Bundle();
-                localBundle.putString("cn.sevensencond.petmonitor.devicename", name);
+                localBundle.putString("cn.sevensencond.petmonitor.devicename", device.name);
                 intent.putExtra("cn.sevensencond.petmonitor.devicePage", localBundle);
                 startActivity(intent);
                 
             }
         });
-        helper.close();
+//        helper.close();
         
         mDevicesNoneTips = findViewById(R.id.devices_none_tips);
         mDevicesViewTips = findViewById(R.id.devices_view_tips);
@@ -222,6 +236,7 @@ public class OverviewActivity extends Activity {
         // TODO Auto-generated method stub
         super.onDestroy();
         downloadService.shutdown();
+        dbManager.closeDB();
     }
     
     private void updateUserSticker() {
@@ -265,27 +280,25 @@ public class OverviewActivity extends Activity {
         scrollLayout.snapToScreen(snapToScreenIndex);
     }
 
-    public class CustomList extends ArrayAdapter<String> {
-        private final Activity context;
-        private final String[] web;
-        private final Integer[] imageId;
+    public class CustomList extends ArrayAdapter<Device> {
+        private List<Device> devices;
+        private LayoutInflater inflater;
 
-        public CustomList(Activity context, String[] web, Integer[] imageId) {
-            super(context, R.layout.list_single, web);
-            this.context = context;
-            this.web = web;
-            this.imageId = imageId;
+        public CustomList(Context context, List<Device> devices) {
+            super(context, R.layout.list_single, devices);
+            this.inflater = LayoutInflater.from(context);
+            this.devices = devices;
         }
 
         @Override
         public View getView(int position, View view, ViewGroup parent) {
-            LayoutInflater inflater = context.getLayoutInflater();
             View rowView = inflater.inflate(R.layout.list_single, null, true);
-            TextView txtTitle = (TextView) rowView
-                    .findViewById(R.id.mylistitem_text_name);
-            txtTitle.setText(web[position]);
-            ImageButton imageButton = (ImageButton) rowView
-                    .findViewById(R.id.mylistitem_button_call);
+            TextView txtTitle = (TextView)rowView.findViewById(R.id.mylistitem_text_name);
+            Device device = devices.get(position);
+            txtTitle.setText(device.name);
+            TextView phoneNumberTextView = (TextView)rowView.findViewById(R.id.mylistitem_text_number);
+            phoneNumberTextView.setText(device.phoneNumber);
+            ImageButton imageButton = (ImageButton)rowView.findViewById(R.id.mylistitem_button_call);
             if (position == 3) {
                 imageButton.setImageResource(R.drawable.locator_phone_disable);
             }
@@ -328,18 +341,17 @@ public class OverviewActivity extends Activity {
     }
     
     public void genListData() {
-        DBHelper helper = new DBHelper(getApplicationContext());
-        if (helper.query().getCount() == 0) {
+        Log.d("database", "count"+dbManager.query().size());
+        if (dbManager.query().size() == 0) {
             for (int i = 0; i < web.length; i++) {
                 ContentValues values = new ContentValues();  
                 values.put("name", web[i]);  
                 values.put("ownerName", web[i]);  
                 values.put("serialNumber", "11110000"); 
                 values.put("phoneNumber", "18600000000");
-                helper.insert(values);
+                dbManager.add(values);
             }
         }
-        helper.close();
     }
 
 }
