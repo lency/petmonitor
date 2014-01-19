@@ -1,4 +1,4 @@
-package cn.sevensencond.petmonitor;
+锘縫ackage cn.sevensencond.petmonitor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -154,8 +154,8 @@ public class DevicePageActivity extends Activity {
         mSpotPhoneNumber.setText("18800000000");
         mSpotNumber.setText("18600000000");
         mLastLocationTime.setText("2012-12-21 00:00:00");
-        mLastLocationStatus.setText("基站定位");
-        mLastLocationAddress.setText("上地");
+        mLastLocationStatus.setText("鍩虹珯瀹氫綅");
+        mLastLocationAddress.setText("涓婂湴");
         
         List localList = getData();
         int i = R.layout.operationlistitem;
