@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import android.R.integer;
+import android.R.string;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
@@ -38,11 +40,9 @@ public class OverviewActivity extends Activity {
     private DBManager dbManager = null; 
     
     ListView devicesListView = null;
-    String[] web = { "Google Plus", "Twitter", "Windows", "Bing", "Sun",
+    String[] deviceNames = { "Google Plus", "Twitter", "Windows", "Bing", "Sun",
             "Oracle" };
-    Integer[] imageId = { R.drawable.smallheader, R.drawable.smallheader,
-            R.drawable.smallheader, R.drawable.smallheader,
-            R.drawable.smallheader, R.drawable.smallheader };
+    String[] ownerNames = { "主控号码：13716468641", "android手机", "unipro分享", "No Info", "No Info", "No Info" };
 
     private View mDevicesNoneTips = null;
     private View mDevicesViewTips = null;
@@ -188,6 +188,7 @@ public class OverviewActivity extends Activity {
                 Intent intent = new Intent(OverviewActivity.this, DevicePageActivity.class);
                 Bundle localBundle = new Bundle();
                 localBundle.putString("cn.sevensencond.petmonitor.devicename", device.name);
+                localBundle.putString("cn.sevensencond.petmonitor.deviceserial", device.serialNumber);
                 intent.putExtra("cn.sevensencond.petmonitor.devicePage", localBundle);
                 startActivity(intent);
                 
@@ -205,7 +206,7 @@ public class OverviewActivity extends Activity {
 //        mDevicesDownArrow.setVisibility(View.GONE);
         
         // init arrowUp and arrowDown
-        mDevicesCount = web.length;
+        mDevicesCount = deviceNames.length;
         if (devicesListView.getFirstVisiblePosition() > 0) {
             mDevicesUpArrow.setVisibility(View.VISIBLE);
         }
@@ -297,9 +298,10 @@ public class OverviewActivity extends Activity {
             Device device = devices.get(position);
             txtTitle.setText(device.name);
             TextView phoneNumberTextView = (TextView)rowView.findViewById(R.id.mylistitem_text_number);
-            phoneNumberTextView.setText(device.phoneNumber);
+            phoneNumberTextView.setText(device.ownerName);
             ImageButton imageButton = (ImageButton)rowView.findViewById(R.id.mylistitem_button_call);
-            if (position == 3) {
+            Log.d("deviceinfo", device.serialNumber + " " + device.phoneNumber);
+            if (device.phoneNumber.length() == 0) {
                 imageButton.setImageResource(R.drawable.locator_phone_disable);
             }
             return rowView;
@@ -341,14 +343,23 @@ public class OverviewActivity extends Activity {
     }
     
     public void genListData() {
-        Log.d("database", "count"+dbManager.query().size());
+        Log.d("database", "count" + dbManager.query().size());
+//        List<Device> devices = dbManager.query();
+//        for (int i = 0; i < devices.size(); i++) {
+//            Device device = devices.get(i);
+//            dbManager.del(device);
+//        }
         if (dbManager.query().size() == 0) {
-            for (int i = 0; i < web.length; i++) {
-                ContentValues values = new ContentValues();  
-                values.put("name", web[i]);  
-                values.put("ownerName", web[i]);  
-                values.put("serialNumber", "11110000"); 
-                values.put("phoneNumber", "18600000000");
+            for (int i = 0; i < deviceNames.length; i++) {
+                ContentValues values = new ContentValues();
+                values.put("name", deviceNames[i]);
+                values.put("ownerName", ownerNames[i]);
+                values.put("serialNumber", "10000000" + String.valueOf(i));
+                String phoneString = "";
+                if (i != 2) {
+                    phoneString = "1860000000" + String.valueOf(i);
+                }
+                values.put("phoneNumber", phoneString);
                 dbManager.add(values);
             }
         }

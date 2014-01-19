@@ -3,6 +3,8 @@ package cn.sevensencond.petmonitor;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.sevensencond.petmonitor.petserver.device;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -34,6 +36,36 @@ public class DBManager {
         } finally {
             db.endTransaction(); // 结束事务
         }
+    }
+    
+    public void update(Device device) {
+        ContentValues cv = new ContentValues();
+        cv.put("phoneNumber", "");
+        db.update("DeviceList", cv, "serialNumber = ?", new String[]{ device.serialNumber });
+    }
+    
+    public void del(Device device) {
+        db.delete("DeviceList", "serialNumber = ?", new String[]{ device.serialNumber });
+    }
+    
+    public Device getDevice(String serialNumber) {
+        Cursor cursor = db.rawQuery("SELECT * FROM DeviceList WHERE serialNumber = ?", new String[]{ serialNumber });
+        if (cursor.getCount() == 1 && cursor.moveToNext()) {
+            return cursorToDevice(cursor);
+        }
+        else {
+            return null;
+        }
+    }
+    
+    public Device cursorToDevice(Cursor cursor) {
+        Log.d("cursor", "cursor pos : " + cursor.getPosition());
+        Device device = new Device();
+        device.name = cursor.getString(cursor.getColumnIndex("name"));
+        device.phoneNumber = cursor.getString(cursor.getColumnIndex("phoneNumber"));
+        device.serialNumber = cursor.getString(cursor.getColumnIndex("serialNumber"));
+        device.ownerName = cursor.getString(cursor.getColumnIndex("ownerName"));
+        return device;
     }
 
     /**

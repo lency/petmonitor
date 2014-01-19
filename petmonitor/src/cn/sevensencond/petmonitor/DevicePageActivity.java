@@ -117,11 +117,16 @@ public class DevicePageActivity extends Activity {
         }
     };
     
+    private DBManager dbManager = null;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("DevicePage", "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.devicepage);
+        
+        // TODO: Can DBManager be init twice?
+        dbManager = new DBManager(this);
         
         this.mSpotName = ((TextView)findViewById(R.id.spotpage_text_name));
         this.mSpotName.setOnClickListener(this.clickListener);
@@ -144,15 +149,17 @@ public class DevicePageActivity extends Activity {
 //        this.mButtonShare.setOnClickListener(this.clickListener);
         Bundle localBundle = getIntent().getBundleExtra("cn.sevensencond.petmonitor.devicePage");
         String deviceName = localBundle.getString("cn.sevensencond.petmonitor.devicename");
+        String serialNumber = localBundle.getString("cn.sevensencond.petmonitor.deviceserial");
+        Device device = dbManager.getDevice(serialNumber);
         mSpotName.setText(deviceName);
+        mSpotPhoneNumber.setText(device.phoneNumber);
+        mSpotNumber.setText(device.ownerName);
         
         mLocationInfo.setVisibility(View.VISIBLE);
         mWaitingLinear.setVisibility(View.GONE);
         
         // stub text first
 //        mSpotName.setText("075");
-        mSpotPhoneNumber.setText("18800000000");
-        mSpotNumber.setText("18600000000");
         mLastLocationTime.setText("2012-12-21 00:00:00");
         mLastLocationStatus.setText("基站定位");
         mLastLocationAddress.setText("上地");
@@ -170,4 +177,10 @@ public class DevicePageActivity extends Activity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        // TODO Auto-generated method stub
+        super.onDestroy();
+        dbManager.closeDB();
+    }
 }
