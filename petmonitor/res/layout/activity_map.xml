@@ -1,10 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"  
     android:orientation="vertical"  
     android:layout_width="fill_parent"  
-    android:layout_height="fill_parent">  
-     <!-- <TextView android:layout_width="fill_parent"  
-         android:layout_height="wrap_content"  
-         android:text="hello world" /> -->  
+    android:layout_height="fill_parent">
     <com.baidu.mapapi.map.MapView android:id="@+id/bmapsView"  
         android:layout_width="fill_parent"  
         android:layout_height="fill_parent"  
@@ -35,7 +32,7 @@
 	        android:layout_width="wrap_content" 
 	        android:layout_height="wrap_content" 
 	        android:layout_marginRight="10.0dp" 
-	        android:layout_toLeftOf="@id/fence_button_fenceinout" 
+	        android:layout_toLeftOf="@+id/fence_button_fenceinout" 
 	        android:layout_centerVertical="true" 
 	        android:background="#00000000"
 	        android:onClick="locateUser" />
@@ -46,7 +43,7 @@
 	        android:layout_width="wrap_content" 
 	        android:layout_height="wrap_content" 
 	        android:layout_marginRight="10.0dp" 
-	        android:layout_toLeftOf="@id/fence_button_locate_user" 
+	        android:layout_toLeftOf="@+id/fence_button_locate_user" 
 	        android:layout_centerVertical="true"
 	        android:background="#00000000"
 	        android:onClick="locateTarget" />
@@ -57,11 +54,62 @@
             android:layout_width="wrap_content" 
             android:layout_height="wrap_content" 
             android:layout_marginRight="10.0dp" 
-            android:layout_toLeftOf="@id/fence_button_locate_tracker" 
+            android:layout_toLeftOf="@+id/fence_button_locate_tracker" 
             android:layout_centerVertical="true"
             android:background="#00000000"
             android:onClick="handleRoute" />
 
     </RelativeLayout>
-        
+    
+    <RelativeLayout
+        android:id="@+id/maplocation_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#b0ffffff" >
+
+        <ImageButton
+            android:id="@+id/maplocation_button_back"
+            style="@style/button_back"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:onClick="goBack" />
+
+        <ImageButton
+            android:id="@+id/maplocation_button_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/map_next" />
+
+        <ImageButton
+            android:id="@+id/maplocation_button_mylocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="3.0dip"
+            android:layout_toLeftOf="@+id/maplocation_button_next"
+            android:background="@drawable/tracking_me"
+            android:onClick="locateUser" />
+
+        <ImageButton
+            android:id="@+id/maplocation_button_prev"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="3.0dip"
+            android:layout_toLeftOf="@+id/maplocation_button_mylocation"
+            android:background="@drawable/map_pre" />
+
+        <ImageButton
+            android:id="@+id/maplocation_button_route"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="3.0dip"
+            android:layout_toLeftOf="@+id/maplocation_button_prev"
+            android:background="@drawable/route_button_bg"
+            android:onClick="handleRoute" />
+    </RelativeLayout>
 </RelativeLayout>

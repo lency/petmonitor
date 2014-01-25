@@ -1,6 +1,5 @@
 package cn.sevensencond.petmonitor;
 
-import android.R.integer;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -13,7 +12,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+
+import cn.sevensencond.petmonitor.DevicePageActivity.MAP_ID;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -65,6 +68,12 @@ public class MapActivity extends Activity {
     
     boolean fenceIn = false;
     CircleView circleView = null;
+    
+    private RelativeLayout mapLocationLayout = null;
+    private RelativeLayout mapFenceLayout = null;
+    
+    boolean isCurLocTarget = false;
+    ImageButton routeButton = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +82,20 @@ public class MapActivity extends Activity {
         mBMapMan.init("MBwMkvhVTIRMlnsqlCeXZybo", null);
         // 注意：请在试用setContentView前初始化BMapManager对象，否则会报错
         setContentView(R.layout.activity_map);
+
+        mapLocationLayout = (RelativeLayout)findViewById(R.id.maplocation_layout);
+        mapFenceLayout = (RelativeLayout)findViewById(R.id.fence_relativelayout_buttons);
+        
+        Bundle localBundle = getIntent().getBundleExtra("cn.sevensencond.petmonitor.map");
+        int mapType = localBundle.getInt("cn.sevensencond.petmonitor.mapType", -1);
+        if (mapType == MAP_ID.TRACK.ordinal()) {
+            mapLocationLayout.setVisibility(View.VISIBLE);
+            mapFenceLayout.setVisibility(View.GONE);
+        }
+        
+        
         mMapView = (MapView) findViewById(R.id.bmapsView);
-        mMapView.setBuiltInZoomControls(true);
+//        mMapView.setBuiltInZoomControls(true);
         // 设置启用内置的缩放控件
         mMapController = mMapView.getController();
         // 得到mMapView的控制权,可以用它控制和驱动平移和缩放
@@ -136,28 +157,7 @@ public class MapActivity extends Activity {
                 int mapHeight = mMapView.getHeight();
                 Log.d("MapView", "width is "+mapWidth+" height is "+mapHeight);
                 Point centerPoint = mMapView.getCenterPixel();
-
-                circleView = new CircleView(getApplicationContext());
-                circleView.setMinimumWidth(mapWidth);
-                circleView.setMinimumHeight(mapHeight);
-
-                circleView.setCenterPixel(centerPoint);
-                circleView.setRadius((int)(mapWidth*0.9/2));
-                
-                circleView.setColor(Color.RED);
-                
-                MapView.LayoutParams layoutParam = new MapView.LayoutParams(
-                    // 控件宽,继承自ViewGroup.LayoutParams
-                    MapView.LayoutParams.WRAP_CONTENT,
-                    // 控件高,继承自ViewGroup.LayoutParams
-                    MapView.LayoutParams.WRAP_CONTENT,
-                    // 使控件固定在某个地理位置
-                    // pt,
-                    0, 0,
-                    // 控件对齐方式
-                    MapView.LayoutParams.TOP);
-                // 添加View到MapView中
-                mMapView.addView(circleView, layoutParam);
+//                addCircleView(centerPoint, mapWidth, mapHeight);
             }
         };    
         mMapView.regMapViewListener(mBMapMan, mapViewListener);  //注册监听 
@@ -166,6 +166,23 @@ public class MapActivity extends Activity {
         mMKSearch.init(mBMapMan, new MySearchListener());//注意，MKSearchListener只支持一个，以最后一次设置为准
         
         addItemOverlay();
+
+        routeButton = (ImageButton)findViewById(R.id.maplocation_button_route);
+        ImageButton preLocButton = (ImageButton)findViewById(R.id.maplocation_button_prev);
+        ImageButton nextLocButton = (ImageButton)findViewById(R.id.maplocation_button_next);
+        View.OnClickListener locListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                if (isCurLocTarget) {
+                    locateUser(v);
+                } else {
+                    locateTarget(v);
+                }
+            }
+        };
+        preLocButton.setOnClickListener(locListener);
+        nextLocButton.setOnClickListener(locListener);
     }
     
     public class MySearchListener implements MKSearchListener {    
@@ -222,31 +239,30 @@ public class MapActivity extends Activity {
         int y = 378;
         int r = 200;
         int color = Color.RED;
+        Paint strokePaint, fillPaint;
         
         public CircleView(Context context) {
             super(context);
+            strokePaint = new Paint();
+            fillPaint = new Paint();
         }
         
         @Override
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
 //            canvas.drawColor(Color.CYAN);
-            Paint p = new Paint();
             // smooths
-            p.setAntiAlias(true);
-            p.setColor(color);
-            p.setStyle(Paint.Style.STROKE); 
-            p.setStrokeWidth(3f);
-            // opacity
-            //p.setAlpha(0x80); //
-            canvas.drawCircle(x, y, r, p);
+            strokePaint.setAntiAlias(true);
+            strokePaint.setColor(color);
+            strokePaint.setStyle(Paint.Style.STROKE); 
+            strokePaint.setStrokeWidth(3f);
+            canvas.drawCircle(x, y, r, strokePaint);
             
-            Paint p2 = new Paint();
-            p2.setAntiAlias(true);
-            p2.setColor(color);
-            p2.setStyle(Paint.Style.FILL);
-            p2.setAlpha(0x20);
-            canvas.drawCircle(x, y, r, p2);
+            fillPaint.setAntiAlias(true);
+            fillPaint.setColor(color);
+            fillPaint.setStyle(Paint.Style.FILL);
+            fillPaint.setAlpha(0x20);
+            canvas.drawCircle(x, y, r, fillPaint);
         }
         
         public void setRadius(int r) {
@@ -287,9 +303,10 @@ public class MapActivity extends Activity {
             if (isFirstLoc) {
                 // 移动地图到定位点
                 Log.d("LocationOverlay", "receive location, animate to it");
-                mMapController.animateTo(new GeoPoint(
-                        (int) (locData.latitude * 1e6),
-                        (int) (locData.longitude * 1e6)));
+                locateUser(mMapView);
+//                mMapController.animateTo(new GeoPoint(
+//                        (int) (locData.latitude * 1e6),
+//                        (int) (locData.longitude * 1e6)));
                 // myLocationOverlay.setLocationMode(LocationMode.FOLLOWING);
             }
             // 首次定位完成
@@ -301,6 +318,30 @@ public class MapActivity extends Activity {
                 return;
             }
         }
+    }
+    
+    public void addCircleView(Point centerPoint, int minWidth, int minHeight) {
+        circleView = new CircleView(getApplicationContext());
+        circleView.setMinimumWidth(minWidth);
+        circleView.setMinimumHeight(minHeight);
+
+        circleView.setCenterPixel(centerPoint);
+        circleView.setRadius((int)(minWidth*0.9/2));
+        
+        circleView.setColor(Color.RED);
+        
+        MapView.LayoutParams layoutParam = new MapView.LayoutParams(
+            // 控件宽,继承自ViewGroup.LayoutParams
+            MapView.LayoutParams.WRAP_CONTENT,
+            // 控件高,继承自ViewGroup.LayoutParams
+            MapView.LayoutParams.WRAP_CONTENT,
+            // 使控件固定在某个地理位置
+            // pt,
+            0, 0,
+            // 控件对齐方式
+            MapView.LayoutParams.TOP);
+        // 添加View到MapView中
+        mMapView.addView(circleView, layoutParam);
     }
     
     public void addItemOverlay() {
@@ -329,11 +370,17 @@ public class MapActivity extends Activity {
         mMapController.animateTo(new GeoPoint(
             (int) (locData.latitude * 1e6),
             (int) (locData.longitude * 1e6)));
+        
+        isCurLocTarget = false;
+        routeButton.setEnabled(false);
     }
     
     public void locateTarget(View view) {
         Log.d("ClickButton", "Click lacate target button");  
         mMapController.animateTo(new GeoPoint(targetLat, targetLgt));
+
+        isCurLocTarget = true;
+        routeButton.setEnabled(true);
     }
     
     public void handleRoute(View view) {
@@ -363,12 +410,9 @@ public class MapActivity extends Activity {
         imageButton.setImageResource(imageRrc);
         fenceIn = !fenceIn;
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.map, menu);
-        return true;
+    
+    public void goBack(View view) {
+        finish();
     }
 
     @Override

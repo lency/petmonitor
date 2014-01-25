@@ -17,11 +17,11 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
-    <style name="petmonitor_widget">
+    <style name="wrap_widget">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
-    <style name="title_base" parent="@style/petmonitor_widget">
+    <style name="title_base" parent="@style/wrap_widget">
         <item name="android:textSize">@dimen/title_text_size</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/title</item>
@@ -30,7 +30,7 @@
     <style name="title" parent="@style/title_base">
         <item name="android:background">@drawable/title_bg</item>
     </style>
-    <style name="image_button" parent="@style/petmonitor_widget">
+    <style name="image_button" parent="@style/wrap_widget">
         <item name="android:contentDescription">@string/stubImageDescription</item>
         <item name="android:background">@android:color/transparent</item>
     </style>
@@ -59,11 +59,14 @@
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
-    <style name="button_normal" parent="@style/petmonitor_widget">
+    <style name="button_normal" parent="@style/wrap_widget">
         <item name="android:textSize">@dimen/button_ok_text_size</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/button_text</item>
         <item name="android:background">@drawable/button_background</item>
+    </style>
+    <style name="button_back" parent="@style/wrap_widget">
+        <item name="android:background">@drawable/button_back</item>
     </style>
     
 </resources>

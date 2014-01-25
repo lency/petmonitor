@@ -5,11 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.sevensencond.petmonitor.OverviewActivity.CustomList;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,50 +38,57 @@ public class DevicePageActivity extends Activity {
     private ImageView mBatteryImage = null;
     private Button mButtonShare = null;
     
+    public enum MAP_ID {
+        TRACK,
+        HISTORY,
+        FENCE
+    }
+    
     private List<Map<String, Object>> getData()
     {
-        ArrayList localArrayList = new ArrayList();
-        HashMap localHashMap1 = new HashMap();
+        ArrayList<Map<String, Object>> localArrayList = new ArrayList<Map<String, Object>>();
+        HashMap<String, Object> localHashMap1 = new HashMap<String, Object>();
         localHashMap1.put("operationImg", Integer.valueOf(R.drawable.listitem_trackobject));
         localHashMap1.put("operationTitle", getString(R.string.location_label));
         localHashMap1.put("operationDesc", getString(R.string.locationdesc_label));
         localHashMap1.put("operationTips", "");
+        localHashMap1.put("id", MAP_ID.TRACK);
         localArrayList.add(localHashMap1);
-        HashMap localHashMap2 = new HashMap();
+        HashMap<String, Object> localHashMap2 = new HashMap<String, Object>();
         localHashMap2.put("operationImg", Integer.valueOf(R.drawable.listitem_history));
         localHashMap2.put("operationTitle", getString(R.string.history));
         localHashMap2.put("operationDesc", getString(R.string.history_desc));
         localHashMap2.put("operationTips", "");
         localArrayList.add(localHashMap2);
-        HashMap localHashMap3 = new HashMap();
+        HashMap<String, Object> localHashMap3 = new HashMap<String, Object>();
         localHashMap3.put("operationImg", Integer.valueOf(R.drawable.listitem_fence));
         localHashMap3.put("operationTitle", getString(R.string.fence));
         localHashMap3.put("operationDesc", getString(R.string.fence_desc));
         localHashMap3.put("operationTips", getString(R.string.fencein));
         localArrayList.add(localHashMap3);
         
-        HashMap localHashMap9 = new HashMap();
+        HashMap<String, Object> localHashMap9 = new HashMap<String, Object>();
         localHashMap9.put("operationImg", Integer.valueOf(R.drawable.listitem_tracking));
         localHashMap9.put("operationTitle", getString(R.string.following));
         localHashMap9.put("operationDesc", getString(R.string.follow_desc));
         localHashMap9.put("operationTips", "");
         localArrayList.add(localHashMap9);
         
-        HashMap localHashMap7 = new HashMap();
+        HashMap<String, Object> localHashMap7 = new HashMap<String, Object>();
         localHashMap7.put("operationImg", Integer.valueOf(R.drawable.listitem_trackormode));
         localHashMap7.put("operationTitle", getString(R.string.trackormode));
         localHashMap7.put("operationDesc", getString(R.string.trackormode_desc));
         localHashMap7.put("operationTips", "");
         localArrayList.add(localHashMap7);
 
-        HashMap localHashMap8 = new HashMap();
+        HashMap<String, Object> localHashMap8 = new HashMap<String, Object>();
         localHashMap8.put("operationImg", Integer.valueOf(R.drawable.listitem_sos));
         localHashMap8.put("operationTitle", getString(R.string.trackorsos));
         localHashMap8.put("operationDesc", getString(R.string.sossetting));
         localHashMap8.put("operationTips", "");
         localArrayList.add(localHashMap8);
         
-        HashMap localHashMap4 = new HashMap();
+        HashMap<String, Object> localHashMap4 = new HashMap<String, Object>();
         localHashMap4.put("operationImg", Integer.valueOf(R.drawable.listitem_gps));
         localHashMap4.put("operationTitle", getString(R.string.gps_status));
         localHashMap4.put("operationDesc", getString(R.string.gps_status_desc));
@@ -91,7 +101,7 @@ public class DevicePageActivity extends Activity {
 //        localHashMap5.put("operationDesc", getString(R.string.cancel_share_desc));
 //        localHashMap5.put("operationTips", "");
 //        localArrayList.add(localHashMap5);
-        HashMap localHashMap6 = new HashMap();
+        HashMap<String, Object> localHashMap6 = new HashMap<String, Object>();
         localHashMap6.put("operationImg", Integer.valueOf(R.drawable.listitem_deletetrackor));
         localHashMap6.put("operationTitle", getString(R.string.delete_label));
         localHashMap6.put("operationDesc", getString(R.string.deletedesc_label));
@@ -164,17 +174,29 @@ public class DevicePageActivity extends Activity {
         mLastLocationStatus.setText("基站定位");
         mLastLocationAddress.setText("上地");
         
-        List localList = getData();
-        int i = R.layout.operationlistitem;
+        List<Map<String, Object>> localList = getData();
         String[] arrayOfString = { "operationImg", "operationTitle", "operationDesc", "operationTips" };
         int[] arrayOfInt = new int[4];
         arrayOfInt[0] = R.id.operationlisteitem_img_icon;
         arrayOfInt[1] = R.id.operationlisteitem_text_title;
         arrayOfInt[2] = R.id.operationlisteitem_text_info;
         arrayOfInt[3] = R.id.operationlisteitem_text_tip;
-        SimpleAdapter localSimpleAdapter = new SimpleAdapter(this, localList, i, arrayOfString, arrayOfInt);
-        this.mOperationList.setAdapter(localSimpleAdapter);
-
+        SimpleAdapter localSimpleAdapter = new SimpleAdapter(this, localList, R.layout.operationlistitem, arrayOfString, arrayOfInt);
+        mOperationList.setAdapter(localSimpleAdapter);
+        mOperationList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                HashMap<String,Object> localHashMap = (HashMap<String,Object>)parent.getItemAtPosition(position);
+                
+                if (localHashMap.get("id") == MAP_ID.TRACK) {
+                    Intent intent = new Intent(DevicePageActivity.this, MapActivity.class);
+                    Bundle localBundle = new Bundle();
+                    localBundle.putInt("cn.sevensencond.petmonitor.mapType", MAP_ID.TRACK.ordinal());
+                    intent.putExtra("cn.sevensencond.petmonitor.map", localBundle);
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     @Override
