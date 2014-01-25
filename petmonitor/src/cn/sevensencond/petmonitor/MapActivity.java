@@ -120,6 +120,8 @@ public class MapActivity extends Activity {
         myLocationOverlay = new MyLocationOverlay(mMapView);
         // 设置定位数据
         myLocationOverlay.setData(locData);
+        // 设置图标
+        myLocationOverlay.setMarker(getResources().getDrawable(R.drawable.point1));
         // 添加定位图层
         mMapView.getOverlays().add(myLocationOverlay);
         myLocationOverlay.enableCompass();
