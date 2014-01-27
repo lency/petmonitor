@@ -1,5 +1,6 @@
 package cn.sevensencond.petmonitor;
 
+import android.R.integer;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -10,12 +11,9 @@ import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
-
 import cn.sevensencond.petmonitor.DevicePageActivity.MAP_ID;
 
 import com.baidu.location.BDLocation;
@@ -23,6 +21,9 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.BMapManager;
+import com.baidu.mapapi.map.Geometry;
+import com.baidu.mapapi.map.Graphic;
+import com.baidu.mapapi.map.GraphicsOverlay;
 import com.baidu.mapapi.map.ItemizedOverlay;
 import com.baidu.mapapi.map.LocationData;
 import com.baidu.mapapi.map.MKMapViewListener;
@@ -32,6 +33,9 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationOverlay;
 import com.baidu.mapapi.map.OverlayItem;
 import com.baidu.mapapi.map.RouteOverlay;
+import com.baidu.mapapi.map.Symbol;
+import com.baidu.mapapi.map.TextOverlay;
+import com.baidu.mapapi.map.Symbol.Stroke;
 import com.baidu.mapapi.search.MKAddrInfo;
 import com.baidu.mapapi.search.MKBusLineResult;
 import com.baidu.mapapi.search.MKDrivingRouteResult;
@@ -57,7 +61,7 @@ public class MapActivity extends Activity {
     // 定位图层
     MyLocationOverlay myLocationOverlay = null;
 
-    boolean isFirstLoc = true;// 是否首次定位
+//    boolean isFirstLoc = true;// 是否首次定位
     
     // 检索服务，用于路径规划
     MKSearch mMKSearch = null;
@@ -83,6 +87,20 @@ public class MapActivity extends Activity {
         // 注意：请在试用setContentView前初始化BMapManager对象，否则会报错
         setContentView(R.layout.activity_map);
 
+        mMapView = (MapView) findViewById(R.id.bmapsView);
+        // 设置启用内置的缩放控件
+//      mMapView.setBuiltInZoomControls(true);
+        // 得到mMapView的控制权,可以用它控制和驱动平移和缩放
+        mMapController = mMapView.getController();
+        // 用给定的经纬度构造一个GeoPoint，单位是微度 (度 * 1E6)
+        // GeoPoint point =new GeoPoint((int)(39.915* 1E6),(int)(116.404* 1E6));
+        // mMapController.setCenter(point); //设置地图中心点
+        mMapController.setZoom(14);// 设置地图zoom级别
+        
+        mMKSearch = new MKSearch();  
+        mMKSearch.init(mBMapMan, new MySearchListener());//注意，MKSearchListener只支持一个，以最后一次设置为准
+        
+        
         mapLocationLayout = (RelativeLayout)findViewById(R.id.maplocation_layout);
         mapFenceLayout = (RelativeLayout)findViewById(R.id.fence_relativelayout_buttons);
         
@@ -91,101 +109,140 @@ public class MapActivity extends Activity {
         if (mapType == MAP_ID.TRACK.ordinal()) {
             mapLocationLayout.setVisibility(View.VISIBLE);
             mapFenceLayout.setVisibility(View.GONE);
+
+            addFence();
+            
+            // 设置接收数据
+            mLocClient = new LocationClient(this);
+            locData = new LocationData();
+            mLocClient.registerLocationListener(myListener);
+            LocationClientOption option = new LocationClientOption();
+            option.setOpenGps(true);// 打开gps
+            option.setCoorType("bd09ll"); // 设置坐标类型
+            option.setScanSpan(1000);
+            mLocClient.setLocOption(option);
+            mLocClient.start();
+            
+            // 定位图层初始化
+            myLocationOverlay = new MyLocationOverlay(mMapView);
+            // 设置定位数据
+            myLocationOverlay.setData(locData);
+            // 设置图标
+            myLocationOverlay.setMarker(getResources().getDrawable(R.drawable.point1));
+            // 添加定位图层
+            mMapView.getOverlays().add(myLocationOverlay);
+            myLocationOverlay.enableCompass();
+            // 修改定位数据后刷新图层生效
+            mMapView.refresh();
+            
+            routeButton = (ImageButton)findViewById(R.id.maplocation_button_route);
+            ImageButton preLocButton = (ImageButton)findViewById(R.id.maplocation_button_prev);
+            ImageButton nextLocButton = (ImageButton)findViewById(R.id.maplocation_button_next);
+            View.OnClickListener locListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // TODO Auto-generated method stub
+                    if (isCurLocTarget) {
+                        locateUser(v);
+                    } else {
+                        locateTarget(v);
+                    }
+                }
+            };
+            preLocButton.setOnClickListener(locListener);
+            nextLocButton.setOnClickListener(locListener);
+            
+            addTargetOverlay();
+            locateTarget(mMapView);
+        } else if (mapType == MAP_ID.FENCE.ordinal()) {
+            
         }
         
-        
-        mMapView = (MapView) findViewById(R.id.bmapsView);
-//        mMapView.setBuiltInZoomControls(true);
-        // 设置启用内置的缩放控件
-        mMapController = mMapView.getController();
-        // 得到mMapView的控制权,可以用它控制和驱动平移和缩放
-        // GeoPoint point =new GeoPoint((int)(39.915* 1E6),(int)(116.404* 1E6));
-        // 用给定的经纬度构造一个GeoPoint，单位是微度 (度 * 1E6)
-        // mMapController.setCenter(point);//设置地图中心点
-        mMapController.setZoom(14);// 设置地图zoom级别
-
-        mLocClient = new LocationClient(this);
-        locData = new LocationData();
-        mLocClient.registerLocationListener(myListener);
-        LocationClientOption option = new LocationClientOption();
-        option.setOpenGps(true);// 打开gps
-        option.setCoorType("bd09ll"); // 设置坐标类型
-        option.setScanSpan(1000);
-        mLocClient.setLocOption(option);
-        mLocClient.start();
-
-        // mLocClient.requestLocation();
-
-        // 定位图层初始化
-        myLocationOverlay = new MyLocationOverlay(mMapView);
-        // 设置定位数据
-        myLocationOverlay.setData(locData);
-        // 设置图标
-        myLocationOverlay.setMarker(getResources().getDrawable(R.drawable.point1));
-        // 添加定位图层
-        mMapView.getOverlays().add(myLocationOverlay);
-        myLocationOverlay.enableCompass();
-        // 修改定位数据后刷新图层生效
-        mMapView.refresh();
-        
         MKMapViewListener mapViewListener = new MKMapViewListener() {    
-            
             @Override    
             public void onMapMoveFinish() {    
                 // 此处可以实现地图移动完成事件的状态监听    
             }    
-                                   
             @Override    
             public void onClickMapPoi(MapPoi arg0) {    
                 // 此处可实现点击到地图可点标注时的监听    
             }    
-          
             @Override  
             public void onGetCurrentMap(Bitmap b) {  
                 //用MapView.getCurrentMap()发起截图后，在此处理截图结果.    
             }  
-          
             @Override  
             public void onMapAnimationFinish() {  
             /** 
              *  地图完成带动画的操作（如: animationTo()）后，此回调被触发 
              */  
             }  
-          
             @Override  
             public void onMapLoadFinish() {  
                 //地图初始化完成时，此回调被触发. 
                 int mapWidth = mMapView.getWidth();
                 int mapHeight = mMapView.getHeight();
                 Log.d("MapView", "width is "+mapWidth+" height is "+mapHeight);
-                Point centerPoint = mMapView.getCenterPixel();
+//                Point centerPoint = mMapView.getCenterPixel();
 //                addCircleView(centerPoint, mapWidth, mapHeight);
             }
-        };    
-        mMapView.regMapViewListener(mBMapMan, mapViewListener);  //注册监听 
-        
-        mMKSearch = new MKSearch();  
-        mMKSearch.init(mBMapMan, new MySearchListener());//注意，MKSearchListener只支持一个，以最后一次设置为准
-        
-        addItemOverlay();
-
-        routeButton = (ImageButton)findViewById(R.id.maplocation_button_route);
-        ImageButton preLocButton = (ImageButton)findViewById(R.id.maplocation_button_prev);
-        ImageButton nextLocButton = (ImageButton)findViewById(R.id.maplocation_button_next);
-        View.OnClickListener locListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                if (isCurLocTarget) {
-                    locateUser(v);
-                } else {
-                    locateTarget(v);
-                }
-            }
         };
-        preLocButton.setOnClickListener(locListener);
-        nextLocButton.setOnClickListener(locListener);
+        mMapView.regMapViewListener(mBMapMan, mapViewListener);  //注册监听 
     }
+    
+    /**
+     * 添加点、线、多边形、圆、文字
+     */
+    public void addFence(){
+        GraphicsOverlay graphicsOverlay = new GraphicsOverlay(mMapView);
+        mMapView.getOverlays().add(graphicsOverlay);
+        //添加点
+//        graphicsOverlay.setData(drawPoint());
+        //添加折线
+//        graphicsOverlay.setData(drawLine());
+        //添加多边形
+//        graphicsOverlay.setData(drawPolygon());
+        //添加圆
+        int radius = 2500;
+        double lat = targetLat/1E6, lon = targetLgt/1E6;
+        boolean isFenceIn = true;
+        graphicsOverlay.setData(drawCircle(radius, lat, lon, isFenceIn));
+        //绘制文字
+        TextOverlay textOverlay = new TextOverlay(mMapView);
+        mMapView.getOverlays().add(textOverlay);
+//        textOverlay.addText(drawText());
+        //执行地图刷新使生效
+        mMapView.refresh();
+    }
+    /**
+     * 绘制圆，该圆随地图状态变化
+     * @return 圆对象
+     */
+    public Graphic drawCircle(int mRadius, double mLat, double mLon, boolean isFenceIn) { 
+        int lat = (int) (mLat*1E6);
+        int lon = (int) (mLon*1E6);     
+        GeoPoint centerPoint = new GeoPoint(lat, lon);
+        
+        //构建圆
+        Geometry circleGeometry = new Geometry();
+    
+        //设置圆中心点坐标和半径
+        circleGeometry.setCircle(centerPoint, mRadius);
+        //设置样式
+        Symbol circleSymbol = new Symbol();
+        Symbol.Color circleColor, translucentCircleColor;
+        if (isFenceIn) {
+            circleColor = circleSymbol.new Color(0xFF0000FF);
+            translucentCircleColor = circleSymbol.new Color(0x200000FF);
+        } else {
+            circleColor = circleSymbol.new Color(0xFFFF0000);
+            translucentCircleColor = circleSymbol.new Color(0x20FF0000);
+        }
+        circleSymbol.setSurface(translucentCircleColor, 1, 3, new Stroke(3, circleColor));
+        //生成Graphic对象
+        Graphic circleGraphic = new Graphic(circleGeometry, circleSymbol);
+        return circleGraphic;
+   }
     
     public class MySearchListener implements MKSearchListener {    
         @Override    
@@ -302,17 +359,17 @@ public class MapActivity extends Activity {
             // 更新图层数据执行刷新后生效
             mMapView.refresh();
             // 是手动触发请求或首次定位时，移动到定位点
-            if (isFirstLoc) {
-                // 移动地图到定位点
-                Log.d("LocationOverlay", "receive location, animate to it");
-                locateUser(mMapView);
-//                mMapController.animateTo(new GeoPoint(
-//                        (int) (locData.latitude * 1e6),
-//                        (int) (locData.longitude * 1e6)));
-                // myLocationOverlay.setLocationMode(LocationMode.FOLLOWING);
-            }
-            // 首次定位完成
-            isFirstLoc = false;
+//            if (isFirstLoc) {
+//                // 移动地图到定位点
+//                Log.d("LocationOverlay", "receive location, animate to it");
+//                locateUser(mMapView);
+////                mMapController.animateTo(new GeoPoint(
+////                        (int) (locData.latitude * 1e6),
+////                        (int) (locData.longitude * 1e6)));
+//                // myLocationOverlay.setLocationMode(LocationMode.FOLLOWING);
+//            }
+//            // 首次定位完成
+//            isFirstLoc = false;
         }
 
         public void onReceivePoi(BDLocation poiLocation) {
@@ -346,7 +403,7 @@ public class MapActivity extends Activity {
         mMapView.addView(circleView, layoutParam);
     }
     
-    public void addItemOverlay() {
+    public void addTargetOverlay() {
         //准备overlay图像数据，根据实情情况修复  
         Drawable mark= getResources().getDrawable(R.drawable.point2);
         //用OverlayItem准备Overlay数据  
@@ -441,6 +498,10 @@ public class MapActivity extends Activity {
         mMapView.onResume();
         if (mBMapMan != null) {
             mBMapMan.start();
+            // 有时候路径规划会失效，所以每次onResume都初始化一次，希望能解决这个问题
+            if (mMKSearch != null) {
+                mMKSearch.init(mBMapMan, new MySearchListener());
+            }
         }
         super.onResume();
     }
